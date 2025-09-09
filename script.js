@@ -1,287 +1,364 @@
-const sliderWrapper = document.querySelector('.slider-wrapper');
-const images = document.querySelectorAll('.slider-wrapper img');
-const dots = document.querySelectorAll('.dot');
-const leftArrow = document.querySelector('.left-arrow');
-const rightArrow = document.querySelector('.right-arrow');
-let currentIndex = 1;
-let isTransitioning = false;
-let startX = 0;
+/**************************
+ * 슬라이더 (모바일 드래그 고침)
+ **************************/
+const slider = document.getElementById('slider');
+const sliderWrapper = document.getElementById('sliderWrapper');
+const slides = Array.from(sliderWrapper.querySelectorAll('.slide'));
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const indicatorsEl = document.getElementById('indicators');
+
+let currentIndex = 1;                // [클론 포함] 시작 인덱스
+let slideWidth = 0;                  // px 기준
 let isDragging = false;
+let startX = 0;
+let currentX = 0;
+let startTranslate = 0;
 let currentTranslate = 0;
-let prevTranslate = 0;
-let animationID = 0;
-const threshold = 50;  // 슬라이드 동작을 위한 최소 이동 거리
-const totalSlides = images.length - 2;  // 복제된 슬라이드 제외
+let animId = 0;
+let totalSlides = slides.length - 2; // 클론 제외 실제 개수
 
-function updateSliderPosition() {
-    sliderWrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+// 인디케이터 동적 생성
+function buildIndicators() {
+  indicatorsEl.innerHTML = '';
+  for (let i = 0; i < totalSlides; i++) {
+    const dot = document.createElement('span');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => goTo(i + 1));
+    indicatorsEl.appendChild(dot);
+  }
+}
+buildIndicators();
+
+function setActiveDot() {
+  const dots = indicatorsEl.querySelectorAll('.dot');
+  dots.forEach((d, i) => d.classList.toggle('active', i === currentIndex - 1));
 }
 
-function showImage(index) {
-    if (isTransitioning) return;
-    isTransitioning = true;
-    currentIndex = index;
-    sliderWrapper.style.transition = 'transform 0.5s ease-in-out';
-    updateSliderPosition();
-    sliderWrapper.addEventListener('transitionend', () => {
-        if (currentIndex === 0) {
-            sliderWrapper.style.transition = 'none';
-            currentIndex = totalSlides;
-            updateSliderPosition();
-        }
-        if (currentIndex === images.length - 1) {
-            sliderWrapper.style.transition = 'none';
-            currentIndex = 1;
-            updateSliderPosition();
-        }
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === currentIndex - 1);
-        });
-        isTransitioning = false;
-    }, { once: true });
+function measure() {
+  slideWidth = slider.getBoundingClientRect().width;
+  // 현재 인덱스 기준으로 px 이동
+  setTranslate(-currentIndex * slideWidth, false);
+}
+window.addEventListener('resize', measure);
+measure();
+
+function setTranslate(x, withTransition = true) {
+  sliderWrapper.style.transition = withTransition ? 'transform .45s ease-in-out' : 'none';
+  sliderWrapper.style.transform = `translateX(${x}px)`;
+  currentTranslate = x;
 }
 
-function nextImage() {
-    if (currentIndex < images.length - 1) {
-        showImage(currentIndex + 1);
-    }
+function goTo(index) {
+  currentIndex = index;
+  setTranslate(-currentIndex * slideWidth, true);
 }
 
-function prevImage() {
-    if (currentIndex > 0) {
-        showImage(currentIndex - 1);
-    }
+function next() {
+  if (currentIndex < slides.length - 1) {
+    goTo(currentIndex + 1);
+  }
+}
+function prev() {
+  if (currentIndex > 0) {
+    goTo(currentIndex - 1);
+  }
 }
 
-dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-        showImage(index + 1);
-    });
+nextBtn.addEventListener('click', next);
+prevBtn.addEventListener('click', prev);
+
+sliderWrapper.addEventListener('transitionend', () => {
+  // 무한 루프 보정
+  if (currentIndex === 0) {
+    currentIndex = totalSlides;
+    setTranslate(-currentIndex * slideWidth, false);
+  } else if (currentIndex === slides.length - 1) {
+    currentIndex = 1;
+    setTranslate(-currentIndex * slideWidth, false);
+  }
+  setActiveDot();
 });
 
-rightArrow.addEventListener('click', nextImage);
-leftArrow.addEventListener('click', prevImage);
+// 드래그/스와이프
+sliderWrapper.addEventListener('pointerdown', onPointerDown, { passive: true });
+sliderWrapper.addEventListener('pointermove', onPointerMove, { passive: false });
+sliderWrapper.addEventListener('pointerup', onPointerUp);
+sliderWrapper.addEventListener('pointercancel', onPointerUp);
+sliderWrapper.addEventListener('pointerleave', (e) => { if(isDragging) onPointerUp(e); });
 
-sliderWrapper.addEventListener('pointerdown', touchStart);
-sliderWrapper.addEventListener('pointermove', touchMove);
-sliderWrapper.addEventListener('pointerup', touchEnd);
-sliderWrapper.addEventListener('pointercancel', touchEnd);
-sliderWrapper.addEventListener('pointerleave', touchEnd);
-
-function touchStart(event) {
-    startX = event.clientX || event.touches[0].clientX;
-    isDragging = true;
-    sliderWrapper.style.transition = 'none';
-    prevTranslate = currentTranslate;
-    animationID = requestAnimationFrame(animation);
+function onPointerDown(e) {
+  isDragging = true;
+  startX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+  startTranslate = currentTranslate;
+  sliderWrapper.style.transition = 'none';
+  sliderWrapper.setPointerCapture?.(e.pointerId);
 }
 
-function touchMove(event) {
-    if (!isDragging) return;
-    const currentX = event.clientX || event.touches[0].clientX;
-    const moveX = currentX - startX;
-    currentTranslate = prevTranslate + moveX;
-    sliderWrapper.style.transform = `translateX(${currentTranslate}px)`;
+function onPointerMove(e) {
+  if (!isDragging) return;
+  // 가로 스와이프—세로 스크롤 방지
+  e.preventDefault();
+  currentX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+  const delta = currentX - startX;
+  setTranslate(startTranslate + delta, false);
 }
 
-function touchEnd() {
-    cancelAnimationFrame(animationID);
-    isDragging = false;
-    const movedBy = currentTranslate - prevTranslate;
-    
-    if (movedBy < -threshold && currentIndex < images.length - 1) {
-        nextImage();
-    } else if (movedBy > threshold && currentIndex > 0) {
-        prevImage();
-    } else {
-        updateSliderPosition();
-    }
+function onPointerUp() {
+  if (!isDragging) return;
+  isDragging = false;
+  const moved = currentTranslate - startTranslate;
+
+  const threshold = Math.min(80, slideWidth * 0.12);
+  if (moved < -threshold && currentIndex < slides.length - 1) {
+    next();
+  } else if (moved > threshold && currentIndex > 0) {
+    prev();
+  } else {
+    setTranslate(-currentIndex * slideWidth, true);
+  }
 }
 
-function animation() {
-    sliderWrapper.style.transform = `translateX(${currentTranslate}px)`;
-    if (isDragging) requestAnimationFrame(animation);
-}
-
-// 초기 슬라이더 위치 설정
-updateSliderPosition();
-
-// 다음 우편번호 서비스 API를 사용하여 주소를 검색하고 입력 필드에 자동으로 채워줍니다.
+/**************************
+ * 주소검색(다음 우편번호)
+ **************************/
 function sample6_execDaumPostcode() {
-    new daum.Postcode({
-        oncomplete: function(data) {
-            var addr = ''; // 주소 변수
-            var extraAddr = ''; // 참고항목 변수
+  new daum.Postcode({
+    oncomplete: function (data) {
+      let addr = '';
+      let extraAddr = '';
+      if (data.userSelectedType === 'R') addr = data.roadAddress;
+      else addr = data.jibunAddress;
 
-            // 사용자가 선택한 주소 유형에 따라 도로명 주소와 지번 주소를 구분합니다.
-            if (data.userSelectedType === 'R') { 
-                addr = data.roadAddress;
-            } else { 
-                addr = data.jibunAddress;
-            }
-
-            // 참고항목을 추가로 작성합니다. (예: 아파트 명 등)
-            if(data.userSelectedType === 'R'){
-                if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                    extraAddr += data.bname;
-                }
-                if(data.buildingName !== '' && data.apartment === 'Y'){
-                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                }
-                if(extraAddr !== ''){
-                    extraAddr = ' (' + extraAddr + ')';
-                }
-                addr += extraAddr; // 참고항목을 주소에 추가합니다.
-            }
-
-            // 우편번호와 주소 정보를 해당 필드에 입력합니다.
-            document.getElementById('sample6_postcode').value = data.zonecode;
-            document.getElementById("sample6_address").value = addr;
-            
-            // 상세주소 필드로 포커스를 이동합니다.
-            document.getElementById("sample6_detailAddress").focus();
+      if (data.userSelectedType === 'R') {
+        if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+          extraAddr += data.bname;
         }
-    }).open();
-}
+        if (data.buildingName !== '' && data.apartment === 'Y') {
+          extraAddr += (extraAddr !== '' ? ', ' : '') + data.buildingName;
+        }
+        if (extraAddr !== '') addr += ' (' + extraAddr + ')';
+      }
 
-// 구매하기 버튼을 눌렀을 때 주문 폼을 보여주고, 구매 배너를 숨깁니다.
-function showForm() {
-    document.querySelector('.buy-banner').style.display = 'none';
-    document.getElementById('reservation-form').style.display = 'block';
-    setTimeout(function() {
-        document.getElementById('reservation-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-}
-
-// 주문자 정보와 배송 정보가 동일할 경우 배송 정보를 자동으로 채워줍니다.
-document.getElementById('same-as-order').addEventListener('change', function() {
-    if (this.checked) {
-        document.getElementById('recipient-name').value = document.getElementById('order-name').value;
-        document.getElementById('recipient-phone').value = document.getElementById('order-phone').value;
-    } else {
-        document.getElementById('recipient-name').value = '';
-        document.getElementById('recipient-phone').value = '';
+      document.getElementById('sample6_postcode').value = data.zonecode;
+      document.getElementById('sample6_address').value = addr;
+      document.getElementById('sample6_detailAddress').focus();
     }
+  }).open();
+}
+document.getElementById('addrBtn').addEventListener('click', sample6_execDaumPostcode);
+
+/**************************
+ * 구매하기 버튼 → 폼 열기
+ **************************/
+const buyBanner = document.getElementById('buyBanner');
+const buyBtn = document.getElementById('buyBtn');
+const reservationForm = document.getElementById('reservation-form');
+
+buyBtn.addEventListener('click', () => {
+  buyBanner.style.display = 'none';
+  reservationForm.style.display = 'block';
+  document.body.classList.add('form-open');
+  setTimeout(() => {
+    reservationForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 80);
 });
 
-const itemPrices = {
-    "2kg": 25000,
-    "4kg": 45000
-};
+/**************************
+ * 주문 아이템 및 합계
+ **************************/
+const itemPrices = { "2kg": 25000, "4kg": 45000 };
+const selectedItemsEl = document.getElementById('selected-items');
+const addBtn = document.getElementById('addBtn');
+
+addBtn.addEventListener('click', addItem);
 
 function addItem() {
-    const productSelect = document.getElementById('product-select');
-    const selectedItems = document.getElementById('selected-items');
+  const select = document.getElementById('product-select');
+  const product = select.value;
+  const productName = select.options[select.selectedIndex].text;
 
-    const product = productSelect.value;
-    const productName = productSelect.options[productSelect.selectedIndex].text;
+  const wrap = document.createElement('div');
+  wrap.className = 'item';
+  wrap.innerHTML = `
+    <div class="item-info">
+      <span class="item-name">${productName}</span>
+      <span class="item-price">${itemPrices[product].toLocaleString()}원</span>
+    </div>
+    <div class="quantity-controls">
+      <button type="button" class="q-dec">-</button>
+      <input type="number" class="q-input" value="1" min="1" data-product="${product}" />
+      <button type="button" class="q-inc">+</button>
+    </div>
+    <button class="delete-button" type="button">×</button>
+  `;
+  selectedItemsEl.appendChild(wrap);
+  updateTotalPrice();
+}
 
-    const itemElement = document.createElement('div');
-    itemElement.className = 'item';
-    itemElement.innerHTML = `
-        <div class="item-info">
-            <span class="item-name">${productName}</span>
-            <span class="item-price">${itemPrices[product].toLocaleString()}원</span>
-        </div>
-        <div class="quantity-controls">
-            <button onclick="decreaseQuantity(this)">-</button>
-            <input type="number" value="1" min="1" data-product="${product}" onchange="updatePrice(this)">
-            <button onclick="increaseQuantity(this)">+</button>
-        </div>
-        <button class="delete-button" onclick="deleteItem(this)">×</button>
-    `;
+selectedItemsEl.addEventListener('click', (e) => {
+  const item = e.target.closest('.item');
+  if (!item) return;
 
-    selectedItems.appendChild(itemElement);
+  if (e.target.classList.contains('delete-button')) {
+    item.remove();
     updateTotalPrice();
-}
+  }
+  if (e.target.classList.contains('q-dec')) {
+    const input = item.querySelector('.q-input');
+    if (+input.value > 1) { input.value = +input.value - 1; updateItemPrice(input); }
+  }
+  if (e.target.classList.contains('q-inc')) {
+    const input = item.querySelector('.q-input');
+    input.value = +input.value + 1;
+    updateItemPrice(input);
+  }
+});
 
-function decreaseQuantity(button) {
-    const input = button.nextElementSibling;
-    if (input.value > 1) {
-        input.value--;
-        updatePrice(input);
-    }
-}
+selectedItemsEl.addEventListener('change', (e) => {
+  if (e.target.classList.contains('q-input')) {
+    if (+e.target.value < 1) e.target.value = 1;
+    updateItemPrice(e.target);
+  }
+});
 
-function increaseQuantity(button) {
-    const input = button.previousElementSibling;
-    input.value++;
-    updatePrice(input);
-}
-
-function updatePrice(input) {
-    const product = input.getAttribute('data-product');
-    const quantity = parseInt(input.value);
-    const priceElement = input.closest('.item').querySelector('.item-price');
-    const totalPrice = itemPrices[product] * quantity;
-    priceElement.textContent = `${totalPrice.toLocaleString()}원`;
-    updateTotalPrice();
-}
-
-function deleteItem(button) {
-    const itemElement = button.parentElement;
-    itemElement.remove();
-    updateTotalPrice();
+function updateItemPrice(input) {
+  const product = input.dataset.product;
+  const quantity = parseInt(input.value, 10) || 1;
+  const priceEl = input.closest('.item').querySelector('.item-price');
+  priceEl.textContent = `${(itemPrices[product] * quantity).toLocaleString()}원`;
+  updateTotalPrice();
 }
 
 function updateTotalPrice() {
-    const selectedItems = document.getElementById('selected-items').children;
-    let totalPrice = 0;
-
-    Array.from(selectedItems).forEach(item => {
-        const priceText = item.querySelector('.item-price').textContent;
-        const price = parseInt(priceText.replace(/[^0-9]/g, ''));
-        totalPrice += price;
-    });
-
-    document.getElementById('product-price').textContent = `${totalPrice.toLocaleString()}원`;
-    document.getElementById('total-price').textContent = `${totalPrice.toLocaleString()}원`;
+  const items = selectedItemsEl.querySelectorAll('.item');
+  let total = 0;
+  items.forEach(item => {
+    const priceText = item.querySelector('.item-price').textContent;
+    const price = parseInt(priceText.replace(/[^\d]/g, ''), 10) || 0;
+    total += price;
+  });
+  document.getElementById('product-price').textContent = `${total.toLocaleString()}원`;
+  document.getElementById('shipping-fee').textContent = `0원`; // 상품가에 배송비 포함
+  document.getElementById('total-price').textContent = `${total.toLocaleString()}원`;
 }
 
-// 폼 제출 시 데이터를 서버로 전송합니다.
-document.getElementById('reservation-form').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const name = document.getElementById('order-name').value;
-    const phone = document.getElementById('order-phone').value;
-    const recipientName = document.getElementById('recipient-name').value;
-    const recipientPhone = document.getElementById('recipient-phone').value;
-    const postcode = document.getElementById('sample6_postcode').value;
-    const address = document.getElementById('sample6_address').value;
-    const detailAddress = document.getElementById('sample6_detailAddress').value;
-    const extraAddress = document.getElementById('sample6_extraAddress').value;
-    const quantity = document.getElementById('quantity').value;
-
-    fetch('https://script.google.com/macros/s/AKfycbxF7LAt3jgpnjyL4lt79sbzPjO4ZbDvQiyo_hBzJFIdd7PXPWEeVXJujB5nLASfvxCg/exec', {
-        method: 'POST',
-        body: JSON.stringify({
-            name, 
-            phone, 
-            recipientName,
-            recipientPhone,
-            postcode, 
-            address, 
-            detailAddress, 
-            extraAddress, 
-            quantity
-        }),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('예약이 성공적으로 완료되었습니다.');
-        } else {
-            alert('예약에 실패했습니다. 다시 시도해 주세요.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('예약에 실패했습니다. 다시 시도해 주세요.');
-    });
+/**************************
+ * 주문자=수령인 동기화
+ **************************/
+document.getElementById('same-as-order').addEventListener('change', function () {
+  if (this.checked) {
+    document.getElementById('recipient-name').value = document.getElementById('order-name').value;
+    document.getElementById('recipient-phone').value = document.getElementById('order-phone').value;
+  } else {
+    document.getElementById('recipient-name').value = '';
+    document.getElementById('recipient-phone').value = '';
+  }
 });
 
-// 연락처 입력란에서 숫자 키패드가 나타나도록 설정
-document.getElementById('order-phone').setAttribute('type', 'tel');
-document.getElementById('recipient-phone').setAttribute('type', 'tel');
+/**************************
+ * 제출(구글 앱스 스크립트로 전송)
+ * - 존재하지 않는 요소 접근 제거
+ * - 선택 아이템 목록 전송
+ **************************/
+document.getElementById('reservation-form').addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  // 필수: 최소 1개 상품
+  const items = Array.from(selectedItemsEl.querySelectorAll('.item')).map(item => {
+    const name = item.querySelector('.item-name').textContent.trim();
+    const input = item.querySelector('.q-input');
+    const product = input.dataset.product;
+    const qty = parseInt(input.value, 10) || 1;
+    const unit = itemPrices[product] || 0;
+    return { product, name, quantity: qty, unitPrice: unit, lineTotal: unit * qty };
+  });
+  if (items.length === 0) {
+    alert('상품을 최소 1개 이상 추가해 주세요.');
+    return;
+  }
+
+  const payload = {
+    order: {
+      name: document.getElementById('order-name').value.trim(),
+      phone: document.getElementById('order-phone').value.trim()
+    },
+    shipping: {
+      recipientName: document.getElementById('recipient-name').value.trim(),
+      recipientPhone: document.getElementById('recipient-phone').value.trim(),
+      postcode: document.getElementById('sample6_postcode').value.trim(),
+      address: document.getElementById('sample6_address').value.trim(),
+      detailAddress: document.getElementById('sample6_detailAddress').value.trim()
+    },
+    items,
+    totals: {
+      productTotal: items.reduce((s, it) => s + it.lineTotal, 0),
+      shippingFee: 0,
+      grandTotal: items.reduce((s, it) => s + it.lineTotal, 0)
+    },
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    const res = await fetch('https://script.google.com/macros/s/AKfycbxF7LAt3jgpnjyL4lt79sbzPjO4ZbDvQiyo_hBzJFIdd7PXPWEeVXJujB5nLASfvxCg/exec', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json().catch(() => ({}));
+    if (data?.success) {
+      alert('예약이 성공적으로 완료되었습니다.');
+      // 필요하면 location.reload();
+    } else {
+      alert('예약에 실패했습니다. 다시 시도해 주세요.');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('예약에 실패했습니다. 다시 시도해 주세요.');
+  }
+});
+
+
+/***** 카드형 상품 선택용 로직 *****/
+function addSpecificItem(product, qty){
+  const productName = product === '2kg' ? '2kg 3-4수' : '4kg 5-6수';
+
+  const wrap = document.createElement('div');
+  wrap.className = 'item';
+  wrap.innerHTML = `
+    <div class="item-info">
+      <span class="item-name">${productName}</span>
+      <span class="item-price">${(itemPrices[product] * qty).toLocaleString()}원</span>
+    </div>
+    <div class="quantity-controls">
+      <button type="button" class="q-dec">-</button>
+      <input type="number" class="q-input" value="${qty}" min="1" data-product="${product}" />
+      <button type="button" class="q-inc">+</button>
+    </div>
+    <button class="delete-button" type="button">×</button>
+  `;
+  selectedItemsEl.appendChild(wrap);
+  updateTotalPrice();
+}
+
+// 카드 내부 버튼 이벤트 (이벤트 위임)
+document.querySelector('.product-picker').addEventListener('click', (e) => {
+  const card = e.target.closest('.option-card');
+  if (!card) return;
+  const qtyInput = card.querySelector('.opt-qty');
+  const product = card.dataset.product;
+
+  if (e.target.classList.contains('opt-inc')) {
+    qtyInput.value = String((parseInt(qtyInput.value, 10) || 1) + 1);
+  }
+  if (e.target.classList.contains('opt-dec')) {
+    const next = (parseInt(qtyInput.value, 10) || 1) - 1;
+    qtyInput.value = String(next < 1 ? 1 : next);
+  }
+  if (e.target.classList.contains('add-option')) {
+    const qty = parseInt(qtyInput.value, 10) || 1;
+    addSpecificItem(product, qty);
+    // 담은 뒤 수량을 1로 리셋(선택)
+    qtyInput.value = '1';
+  }
+});

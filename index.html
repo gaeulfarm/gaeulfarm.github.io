@@ -1,107 +1,148 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>포도 주문 예약</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>포도 주문 예약</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 <body>
-    <!-- 상단의 가을이네 농장 배너 -->
-    <div class="banner">
-        <img src="img/dog.png" alt="Shine" class="banner-dog">
-        가을이네 농장
-        <img src="img/shine.png" alt="Shine" class="banner-shine">
-    </div>
-    
-    <div class="container">
-        <div class="product-image">
-            <div class="image-slider">
-                <div class="slider-wrapper">
-                    <img src="img/4.jpg" alt="포도4"> <!-- 가상 슬라이드 (마지막 이미지의 복제본) -->
-                    <img src="img/dogAndShine.jpg" alt="포도">
-                    <img src="img/1.jpg" alt="포도1">
-                    <img src="img/2.jpg" alt="포도2">
-                    <img src="img/3.jpg" alt="포도3">
-                    <img src="img/4.jpg" alt="포도4">
-                    <img src="img/dogAndShine.jpg" alt="포도"> <!-- 가상 슬라이드 (첫 번째 이미지의 복제본) -->
-                </div>
-                <div class="arrow left-arrow">&lt;</div>
-                <div class="arrow right-arrow">&gt;</div>
-            </div>
-            <div class="indicators">
-                <span class="dot active"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
+  <!-- 상단 배너 -->
+  <div class="banner" role="banner" aria-label="가을이네 농장">
+    <img src="img/dog.png" alt="" class="banner-dog" />
+    가을이네 농장
+    <img src="img/shine.png" alt="" class="banner-shine" />
+  </div>
+
+  <div class="container">
+    <!-- 이미지 슬라이더 -->
+    <section class="product-image" aria-label="상품 이미지">
+      <div class="image-slider" id="slider" aria-roledescription="carousel">
+        <div class="slider-wrapper" id="sliderWrapper">
+          <!-- 순서: [마지막 복제] [실제 1..N] [첫 복제] -->
+          <img src="img/4.jpg" alt="포도4" class="slide clone" />
+          <img src="img/dogAndShine.jpg" alt="포도 대표" class="slide" />
+          <img src="img/1.jpg" alt="포도1" class="slide" />
+          <img src="img/2.jpg" alt="포도2" class="slide" />
+          <img src="img/3.jpg" alt="포도3" class="slide" />
+          <img src="img/4.jpg" alt="포도4" class="slide" />
+          <img src="img/dogAndShine.jpg" alt="포도 대표" class="slide clone" />
         </div>
 
-        <div class="product-description">
-            <h2>상품 설명</h2>
-            <div class="product-item">
-                <h3>2kg 3-4수 (25,000원)</h3>
-                <img src="img/2kg_box.jpg" alt="2kg box">
-                <img src="img/2kg_package.jpg" alt="2kg package">
-                <p class="note">*배송비 포함 가격입니다*</p>
-                <p class="note">*택배 배송 시 에어백포장하여 보내드립니다*</p>
-            </div>
-            <div class="product-item">
-                <h3>4kg 5-6수 (45,000원)</h3>
-                <img src="img/4kg_box.jpg" alt="4kg box">
-                <img src="img/4kg_package.jpg" alt="4kg package">
-                <p class="note">*배송비 포함 가격입니다*</p>
-                <p class="note">*택배 배송 시 에어백포장하여 보내드립니다*</p>
-            </div>
-        </div>
+        <button class="arrow left-arrow" aria-label="이전 이미지" id="prevBtn" type="button">‹</button>
+        <button class="arrow right-arrow" aria-label="다음 이미지" id="nextBtn" type="button">›</button>
+      </div>
+      <div class="indicators" id="indicators" aria-hidden="true"></div>
+    </section>
 
-        <!-- 구매하기 배너 -->
-        <div class="buy-banner">
-            <a class="buy-button" onclick="showForm()">구매하기</a>
-        </div>
+    <!-- 상품 설명 -->
+    <section class="product-description">
+      <h2>상품 설명</h2>
 
-        <form id="reservation-form">
-            <h2>주문 상품 정보</h2>
-            <div id="order-items">
-                <div class="order-item">
-                    <label for="product-select">상품 선택:</label>
-                    <select id="product-select">
-                        <option value="2kg">2kg 3-4수</option>
-                        <option value="4kg">4kg 5-6수</option>
-                    </select>
-                    <button type="button" class="add-button" onclick="addItem()">추가</button>
-                </div>
-                <div id="selected-items"></div>
-            </div>
-            <h2>주문자 정보</h2>
-            <input type="text" id="order-name" name="order-name" placeholder="이름" required>
-            <input type="tel" id="order-phone" name="order-phone" placeholder="연락처" required>
-            <hr>
-            <h2>배송 정보</h2>
-            <label class="same-as-order-label">
-                <input type="checkbox" id="same-as-order"> 주문자 정보와 동일
-            </label>
-            <input type="text" id="recipient-name" name="recipient-name" placeholder="수령인" required>
-            <input type="tel" id="recipient-phone" name="recipient-phone" placeholder="연락처" required>
-            <div class="address-row">
-                <input type="text" id="sample6_postcode" placeholder="우편번호" required>
-                <input type="button" class="address-button" onclick="sample6_execDaumPostcode()" value="주소찾기">
-            </div>
-            <input type="text" id="sample6_address" placeholder="주소" required>
-            <input type="text" id="sample6_detailAddress" placeholder="상세주소" required>
-            <hr>
-            <h2>주문 요약</h2>
-            <div class="order-summary">
-                <p>상품가격: <span id="product-price">0원</span></p>
-                <p>배송비: <span id="shipping-fee">0원</span></p>
-                <p><strong>총 주문금액: <span id="total-price">0원</span></strong></p>
-            </div>
-            <button type="submit">예약하기</button>
-        </form>
+      <div class="product-item">
+        <h3>2kg 3-4수 (25,000원)</h3>
+        <img src="img/2kg_box.jpg" alt="2kg 박스" />
+        <img src="img/2kg_package.jpg" alt="2kg 포장" />
+        <p class="note">*배송비 포함 가격입니다*</p>
+        <p class="note">*택배 배송 시 에어백 포장하여 보내드립니다*</p>
+      </div>
+
+      <div class="product-item">
+        <h3>4kg 5-6수 (45,000원)</h3>
+        <img src="img/4kg_box.jpg" alt="4kg 박스" />
+        <img src="img/4kg_package.jpg" alt="4kg 포장" />
+        <p class="note">*배송비 포함 가격입니다*</p>
+        <p class="note">*택배 배송 시 에어백 포장하여 보내드립니다*</p>
+      </div>
+    </section>
+
+    <!-- 구매하기 배너 -->
+    <div class="buy-banner" id="buyBanner">
+      <button class="buy-button" type="button" id="buyBtn">구매하기</button>
     </div>
 
-    <script src="script.js"></script>  
+    <!-- 예약 폼 -->
+    <form id="reservation-form" novalidate>
+      <h2>주문 상품 정보</h2>
+
+      <div id="order-items">
+        <div class="product-picker" aria-label="상품 선택">
+            <!-- 2kg 카드 -->
+            <article class="option-card" data-product="2kg">
+            <header class="option-header">
+                <h4 class="option-title">2kg 3-4수</h4>
+                <span class="option-price">25,000원</span>
+            </header>
+            <div class="option-body">
+                <p class="option-desc">배송비 포함 · 에어백 포장</p>
+                <div class="option-controls">
+                <button type="button" class="opt-btn opt-dec" aria-label="수량 감소">−</button>
+                <input type="number" class="opt-qty" value="1" min="1" inputmode="numeric" aria-label="수량" />
+                <button type="button" class="opt-btn opt-inc" aria-label="수량 증가">＋</button>
+                <button type="button" class="add-option">담기</button>
+                </div>
+            </div>
+            </article>
+
+            <!-- 4kg 카드 -->
+            <article class="option-card" data-product="4kg">
+            <header class="option-header">
+                <h4 class="option-title">4kg 5-6수</h4>
+                <span class="option-price">45,000원</span>
+            </header>
+            <div class="option-body">
+                <p class="option-desc">배송비 포함 · 에어백 포장</p>
+                <div class="option-controls">
+                <button type="button" class="opt-btn opt-dec" aria-label="수량 감소">−</button>
+                <input type="number" class="opt-qty" value="1" min="1" inputmode="numeric" aria-label="수량" />
+                <button type="button" class="opt-btn opt-inc" aria-label="수량 증가">＋</button>
+                <button type="button" class="add-option">담기</button>
+                </div>
+            </div>
+            </article>
+        </div>
+
+        <!-- 장바구니 목록은 그대로 사용 -->
+        <div id="selected-items" aria-live="polite"></div>
+    </div>
+
+
+      <h2>주문자 정보</h2>
+      <input type="text" id="order-name" name="order-name" placeholder="이름" required />
+      <input type="tel" id="order-phone" name="order-phone" placeholder="연락처" inputmode="tel" required />
+
+      <hr />
+
+      <h2>배송 정보</h2>
+      <label class="same-as-order-label">
+        <input type="checkbox" id="same-as-order" /> 주문자 정보와 동일
+      </label>
+
+      <input type="text" id="recipient-name" name="recipient-name" placeholder="수령인" required />
+      <input type="tel" id="recipient-phone" name="recipient-phone" placeholder="연락처" inputmode="tel" required />
+
+      <div class="address-row">
+        <input type="text" id="sample6_postcode" placeholder="우편번호" required />
+        <button type="button" class="address-button" id="addrBtn">주소찾기</button>
+      </div>
+
+      <input type="text" id="sample6_address" placeholder="주소" required />
+      <input type="text" id="sample6_detailAddress" placeholder="상세주소" required />
+
+      <hr />
+
+      <h2>주문 요약</h2>
+      <div class="order-summary">
+        <p>상품가격: <span id="product-price">0원</span></p>
+        <p>배송비: <span id="shipping-fee">0원</span></p>
+        <p><strong>총 주문금액: <span id="total-price">0원</span></strong></p>
+      </div>
+
+      <button type="submit" id="submitBtn">예약하기</button>
+    </form>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
