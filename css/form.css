@@ -170,9 +170,31 @@ button[type="submit"] {
   font-size:1.05rem;
   font-weight:700;
 }
+
+/* 주문 상품 정보 박스 가로 정렬 */
+.product-picker {
+  display: flex; /* 가로 정렬 */
+  flex-wrap: wrap; /* 화면 크기에 따라 줄바꿈 허용 */
+  gap: 16px; /* 박스 간격 */
+  justify-content: center; /* 중앙 정렬 */
+}
+
+/* 상품 카드 크기 조정 */
+.option-card {
+  flex: 1 1 calc(50% - 16px); /* 화면 너비의 50%로 설정 */
+  max-width: calc(50% - 16px); /* 최대 너비 설정 */
+  box-sizing: border-box; /* 패딩과 테두리를 포함한 크기 계산 */
+}
+
 /* 모바일/반응형 보정 */
 @media (max-width:480px) {
   .option-controls-row .opt-btn { width:40px; height:38px; }
   .option-controls-row .opt-qty { width:56px; height:38px; }
   .address-row input#sample6_postcode { flex-basis:60%; }
+}
+@media (max-width: 768px) {
+  .option-card {
+    flex: 1 1 100%; /* 모바일에서는 너비를 100%로 설정 */
+    max-width: 100%; /* 최대 너비 설정 */
+  }
 }
