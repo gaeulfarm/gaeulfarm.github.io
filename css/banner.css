@@ -1,0 +1,78 @@
+/* 상단 배너 */
+.banner{
+  background-color:var(--brand);
+  color:var(--brand-ink);
+  padding:12px 0;
+  font-size:30px;
+  font-family:"Euljiro", sans-serif;
+  letter-spacing:4px;
+  text-shadow:2.5px 2.5px 0 #000,
+              -2.5px 2.5px 0 #000,
+               2.5px -2.5px 0 #000,
+              -2.5px -2.5px 0 #000;
+  width:100%;
+  position:fixed; top:0; left:0;
+  z-index:1000;
+  border-bottom:2px solid #000;
+  display:flex; justify-content:center; align-items:center;
+}
+.banner-dog{width:30px;height:30px;margin:0 15px}
+.banner-shine{width:25px;height:35px;margin:0 10px}
+
+/* 구매하기 배너 (모바일 풀폭, 데스크톱 카드형) */
+/*
+.buy-banner{
+  position:fixed; left:0; bottom:0;
+  width:100%;
+  padding:10px max(12px, env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-right));
+  z-index:1000;
+  display:flex; justify-content:center;
+  pointer-events:none;
+}
+.buy-button{
+  pointer-events:auto;
+  display:inline-block;
+  width:100%;
+  max-width:800px;
+  border:none;
+  border-radius:14px;
+  background:var(--cta);
+  color:#fff;
+  font-weight:700; font-size:18px;
+  padding:14px 18px;
+  box-shadow:0 10px 20px rgba(0,0,0,.12);
+  cursor:pointer;
+  transition:transform .05s ease, background .2s ease;
+}
+.buy-button:active{ transform:translateY(1px) }
+.buy-button:hover{ background:var(--cta-hover) }
+*/
+
+
+/* 하단 구매하기 배너 스타일 */
+.buy-banner {
+    background-color: #81c147;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 0;
+    text-align: center;
+    z-index: 1000;
+    cursor: pointer;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.buy-banner:hover {
+    background-color: #6ca235; /* 마우스 오버 시 배경색 변경 */
+}
+
+.buy-button {
+    display: block;
+    font-size: 20px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    width: 100%; 
+    padding: 10px 0;
+}

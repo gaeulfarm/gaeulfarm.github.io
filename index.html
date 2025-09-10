@@ -4,7 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>포도 주문 예약</title>
-  <link rel="stylesheet" href="style.css" />
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/banner.css" />
+  <link rel="stylesheet" href="css/slider.css" />
+  <link rel="stylesheet" href="css/product.css" />
+  <link rel="stylesheet" href="css/form.css" />
+
+    <!-- 다음 주소 API -->
   <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 <body>
@@ -58,91 +65,104 @@
     </section>
 
     <!-- 구매하기 배너 -->
-    <div class="buy-banner" id="buyBanner">
-      <button class="buy-button" type="button" id="buyBtn">구매하기</button>
+    <div class="buy-banner">
+        <a class="buy-button" onclick="showForm()">구매하기</a>
     </div>
 
     <!-- 예약 폼 -->
     <form id="reservation-form" novalidate>
-      <h2>주문 상품 정보</h2>
+      <h2 class="order-header">📋 주문서 </h2>
+      <h2 class="section-title">주문 상품 정보</h2>
 
       <div id="order-items">
         <div class="product-picker" aria-label="상품 선택">
             <!-- 2kg 카드 -->
             <article class="option-card" data-product="2kg">
             <header class="option-header">
-                <h4 class="option-title">2kg 3-4수</h4>
+                <h4 class="option-title">2kg (3-4수)</h4>
                 <span class="option-price">25,000원</span>
             </header>
             <div class="option-body">
                 <p class="option-desc">배송비 포함 · 에어백 포장</p>
-                <div class="option-controls">
-                <button type="button" class="opt-btn opt-dec" aria-label="수량 감소">−</button>
-                <input type="number" class="opt-qty" value="1" min="1" inputmode="numeric" aria-label="수량" />
-                <button type="button" class="opt-btn opt-inc" aria-label="수량 증가">＋</button>
-                <button type="button" class="add-option">담기</button>
+                <div class="option-controls-row">
+                  <button type="button" class="opt-btn opt-dec" aria-label="수량 감소">−</button>
+                  <input type="number" class="opt-qty" value="1" min="1" readonly aria-label="수량" />
+                  <button type="button" class="opt-btn opt-inc" aria-label="수량 증가">＋</button>
                 </div>
-            </div>
-            </article>
+                <div class="option-add-row">
+                  <button type="button" class="add-option">담기</button>
+                </div>
+             </div>
+             </article>
 
             <!-- 4kg 카드 -->
             <article class="option-card" data-product="4kg">
             <header class="option-header">
-                <h4 class="option-title">4kg 5-6수</h4>
+                <h4 class="option-title">4kg (5-6수)</h4>
                 <span class="option-price">45,000원</span>
             </header>
             <div class="option-body">
                 <p class="option-desc">배송비 포함 · 에어백 포장</p>
-                <div class="option-controls">
-                <button type="button" class="opt-btn opt-dec" aria-label="수량 감소">−</button>
-                <input type="number" class="opt-qty" value="1" min="1" inputmode="numeric" aria-label="수량" />
-                <button type="button" class="opt-btn opt-inc" aria-label="수량 증가">＋</button>
-                <button type="button" class="add-option">담기</button>
+                <div class="option-controls-row">
+                  <button type="button" class="opt-btn opt-dec" aria-label="수량 감소">−</button>
+                  <input type="number" class="opt-qty" value="1" min="1" readonly aria-label="수량" />
+                  <button type="button" class="opt-btn opt-inc" aria-label="수량 증가">＋</button>
                 </div>
-            </div>
-            </article>
-        </div>
+                <div class="option-add-row">
+                  <button type="button" class="add-option">담기</button>
+                </div>
+                 </div>
+                 </article>
+         </div>
 
-        <!-- 장바구니 목록은 그대로 사용 -->
+        <!-- 장바구니(상품을 담으면 주문 요약으로 표시) -->
         <div id="selected-items" aria-live="polite"></div>
-    </div>
+     </div>
 
+      <hr class="section-divider" />
+     <h2>주문 요약</h2>
+      <div id="order-summary-list" class="order-summary-list" aria-live="polite">
+        <!-- 담긴 항목들이 여기 렌더링됩니다 -->
+      </div>
+      <div class="order-summary-total">
+        <span class="total-label">총 주문금액</span>
+        <span id="total-price">0원</span>
+      </div>
 
+      <hr class="section-divider" />
       <h2>주문자 정보</h2>
-      <input type="text" id="order-name" name="order-name" placeholder="이름" required />
-      <input type="tel" id="order-phone" name="order-phone" placeholder="연락처" inputmode="tel" required />
+       <input type="text" id="order-name" name="order-name" placeholder="이름" required />
+       <input type="tel" id="order-phone" name="order-phone" placeholder="연락처" inputmode="tel" required />
 
-      <hr />
+       <hr />
 
-      <h2>배송 정보</h2>
-      <label class="same-as-order-label">
-        <input type="checkbox" id="same-as-order" /> 주문자 정보와 동일
+       <h2>배송 정보</h2>
+      <label class="same-as-order">
+        <input type="checkbox" id="same-as-order" /> <span>주문자 정보와 동일</span>
       </label>
 
-      <input type="text" id="recipient-name" name="recipient-name" placeholder="수령인" required />
-      <input type="tel" id="recipient-phone" name="recipient-phone" placeholder="연락처" inputmode="tel" required />
+       <input type="text" id="recipient-name" name="recipient-name" placeholder="수령인" required />
+       <input type="tel" id="recipient-phone" name="recipient-phone" placeholder="연락처" inputmode="tel" required />
 
-      <div class="address-row">
+       <div class="address-row">
         <input type="text" id="sample6_postcode" placeholder="우편번호" required />
         <button type="button" class="address-button" id="addrBtn">주소찾기</button>
-      </div>
+       </div>
 
-      <input type="text" id="sample6_address" placeholder="주소" required />
-      <input type="text" id="sample6_detailAddress" placeholder="상세주소" required />
+       <input type="text" id="sample6_address" placeholder="주소" required />
+       <input type="text" id="sample6_detailAddress" placeholder="상세주소" required />
 
-      <hr />
+       <hr />
+      <button type="submit" id="submitBtn" class="primary-action">예약하기</button>
+     </form>
+   </div>
 
-      <h2>주문 요약</h2>
-      <div class="order-summary">
-        <p>상품가격: <span id="product-price">0원</span></p>
-        <p>배송비: <span id="shipping-fee">0원</span></p>
-        <p><strong>총 주문금액: <span id="total-price">0원</span></strong></p>
-      </div>
-
-      <button type="submit" id="submitBtn">예약하기</button>
-    </form>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+  <script src="js/address.js"></script>
+   <script src="js/form.js"></script>
+   <script src="js/main.js"></script>
+   <script src="js/order.js"></script>
+   <script src="js/slider.js"></script>
+   <script src="js/submit.js"></script>
+   
+ </body>
+ </html>
