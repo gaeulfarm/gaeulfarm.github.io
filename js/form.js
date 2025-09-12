@@ -70,3 +70,18 @@ orderNameEl.addEventListener('input', () => {
 orderPhoneEl.addEventListener('input', () => {
   if (sameAsOrderEl.checked) recipientPhoneEl.value = orderPhoneEl.value;
 });
+
+/**************************
+ * 계좌 복사 기능
+ **************************/
+function copyAccount() {
+  const accountText = document.getElementById('bank-account').textContent;
+  navigator.clipboard.writeText(accountText)
+    .then(() => {
+      console.log('계좌 정보가 복사되었습니다:', accountText);
+    })
+    .catch(err => {
+      console.error('복사 실패:', err);
+    });
+}
+

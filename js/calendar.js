@@ -1,136 +1,168 @@
+// js/calendar.js
 class Calendar {
-  constructor(inputElement) {
+  constructor(inputElement, options = {}) {
     this.input = inputElement;
     this.popup = null;
     this.selectedDate = null;
     this.currentDate = new Date();
-    this.minDate = this.getMinDate();
+    this.minDate = options.minDate || this.getMinDate();
+    this.weekdays = options.weekdays || ['일', '월', '화', '수', '목', '금', '토'];
+
+    // 바인딩(나중에 removeEventListener용)
+    this.handleDocClick = this.handleDocClick.bind(this);
 
     this.init();
   }
 
   getMinDate() {
-    const date = new Date();
-    date.setDate(date.getDate() + 2); // 주문일 기준 2일 후부터
-    return date;
+    const d = new Date();
+    d.setDate(d.getDate() + 2); // 주문일 기준 2일 후부터 선택 가능
+    d.setHours(0, 0, 0, 0);
+    return d;
   }
 
   init() {
+    // 입력 클릭/키보드로 열기
     this.input.addEventListener('click', () => this.showCalendar());
-    document.addEventListener('click', (e) => {
-      if (this.popup && !this.popup.contains(e.target) && e.target !== this.input) {
-        this.hideCalendar();
+    this.input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.showCalendar();
       }
     });
   }
 
   showCalendar() {
+    // 이미 열려 있으면 토글로 닫기
     if (this.popup) {
       this.hideCalendar();
       return;
     }
 
+    // 팝업 생성
     this.popup = document.createElement('div');
     this.popup.className = 'calendar-popup';
-    this.renderCalendar();
-    // iOS Safari에서 포커스/키보드로 인해 위치가 밀리지 않도록 부모에 상대 위치 보장
+    // 팝업 내부 클릭이 문서 닫기 로직으로 전파되지 않게
+    this.popup.addEventListener('click', (e) => e.stopPropagation());
+
+    // iOS Safari에서 레이아웃 밀림 방지: 부모를 상대위치로
     const parent = this.input.parentNode;
     if (getComputedStyle(parent).position === 'static') {
       parent.style.position = 'relative';
     }
-    this.input.parentNode.appendChild(this.popup);
+    parent.appendChild(this.popup);
+
+    // 문서 클릭 시 외부 클릭 감지로 닫기 (한 번만 등록)
+    document.addEventListener('click', this.handleDocClick);
+
+    // 렌더링
+    this.renderCalendar();
   }
 
   hideCalendar() {
     if (this.popup) {
+      // 정리
+      document.removeEventListener('click', this.handleDocClick);
       this.popup.remove();
       this.popup = null;
     }
   }
 
+  handleDocClick(e) {
+    if (!this.popup) return;
+    // input 자신을 다시 클릭하면 토글로 닫히게 하고, 그 외 외부 클릭도 닫기
+    if (e.target !== this.input && !this.popup.contains(e.target)) {
+      this.hideCalendar();
+    }
+  }
+
   renderCalendar() {
+    if (!this.popup) return;
+
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
 
+    // 헤더
     const header = document.createElement('div');
     header.className = 'calendar-header';
     header.innerHTML = `
+      <button type="button" class="prev-month" aria-label="이전 달">‹</button>
       <h3>${year}년 ${month + 1}월</h3>
-      <div class="calendar-nav">
-        <button type="button" class="prev-month">‹</button>
-        <button type="button" class="next-month">›</button>
-      </div>
+      <button type="button" class="next-month" aria-label="다음 달">›</button>
     `;
 
+    // 그리드
     const grid = document.createElement('div');
     grid.className = 'calendar-grid';
 
     // 요일 헤더
-    const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
-    weekdays.forEach(day => {
-      const dayEl = document.createElement('div');
-      dayEl.className = 'weekday';
-      dayEl.textContent = day;
-      grid.appendChild(dayEl);
+    this.weekdays.forEach(day => {
+      const el = document.createElement('div');
+      el.className = 'weekday';
+      el.textContent = day;
+      grid.appendChild(el);
     });
 
-    // 날짜 그리드
+    // 날짜 채우기
     const firstDay = new Date(year, month, 1).getDay();
     const lastDate = new Date(year, month + 1, 0).getDate();
 
-    // 이전 달의 마지막 날짜들
-    const prevMonthLastDate = new Date(year, month, 0).getDate();
+    // 이전 달 앞부분 채우기
+    const prevLast = new Date(year, month, 0).getDate();
     for (let i = firstDay - 1; i >= 0; i--) {
-      const dateEl = document.createElement('div');
-      dateEl.className = 'date disabled';
-      dateEl.textContent = prevMonthLastDate - i;
-      grid.appendChild(dateEl);
+      const el = document.createElement('div');
+      el.className = 'date disabled';
+      el.textContent = prevLast - i;
+      grid.appendChild(el);
     }
 
-    // 현재 달의 날짜들
-    for (let date = 1; date <= lastDate; date++) {
-      const dateEl = document.createElement('div');
-      dateEl.className = 'date';
-      dateEl.textContent = date;
+    // 이번 달 날짜
+    for (let d = 1; d <= lastDate; d++) {
+      const el = document.createElement('div');
+      el.className = 'date';
+      el.textContent = d;
 
-      const currentDateObj = new Date(year, month, date);
-      
-      // 오늘 날짜 표시
-      if (this.isToday(currentDateObj)) {
-        dateEl.classList.add('today');
-      }
+      const dateObj = new Date(year, month, d);
+      dateObj.setHours(0, 0, 0, 0);
 
-      // 선택된 날짜 표시
-      if (this.isSelected(currentDateObj)) {
-        dateEl.classList.add('selected');
-      }
+      if (this.isToday(dateObj)) el.classList.add('today');
+      if (this.isSelected(dateObj)) el.classList.add('selected');
 
-      // 최소 날짜 이전은 비활성화
-      if (currentDateObj < this.minDate) {
-        dateEl.classList.add('disabled');
+      if (dateObj < this.minDate) {
+        el.classList.add('disabled');
       } else {
-        dateEl.addEventListener('click', () => this.selectDate(currentDateObj));
+        el.addEventListener('click', (e) => {
+          e.stopPropagation(); // 닫힘 전파 방지
+          this.selectDate(dateObj);
+        });
       }
-
-      grid.appendChild(dateEl);
+      grid.appendChild(el);
     }
 
-    // 다음 달의 시작 날짜들
-    const remainingDays = 42 - (firstDay + lastDate); // 6주 채우기
-    for (let i = 1; i <= remainingDays; i++) {
-      const dateEl = document.createElement('div');
-      dateEl.className = 'date disabled';
-      dateEl.textContent = i;
-      grid.appendChild(dateEl);
+    // 다음 달 뒷부분 채우기 (6주 = 42칸)
+    const filled = firstDay + lastDate;
+    const remain = 42 - filled;
+    for (let i = 1; i <= remain; i++) {
+      const el = document.createElement('div');
+      el.className = 'date disabled';
+      el.textContent = i;
+      grid.appendChild(el);
     }
 
+    // 팝업 내용 교체
     this.popup.innerHTML = '';
     this.popup.appendChild(header);
     this.popup.appendChild(grid);
 
-    // 이전/다음 달 버튼 이벤트
-    this.popup.querySelector('.prev-month').addEventListener('click', () => this.changeMonth(-1));
-    this.popup.querySelector('.next-month').addEventListener('click', () => this.changeMonth(1));
+    // 네비게이션 이벤트 (전파 방지로 닫힘 방지)
+    this.popup.querySelector('.prev-month').addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.changeMonth(-1);
+    });
+    this.popup.querySelector('.next-month').addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.changeMonth(1);
+    });
   }
 
   changeMonth(delta) {
@@ -141,14 +173,15 @@ class Calendar {
   selectDate(date) {
     this.selectedDate = date;
     this.input.value = this.formatDate(date);
+    // 선택 이벤트를 외부에서 감지할 수 있게
+    this.input.dispatchEvent(new Event('change'));
     this.hideCalendar();
   }
 
   isToday(date) {
-    const today = new Date();
-    return date.getFullYear() === today.getFullYear() &&
-           date.getMonth() === today.getMonth() &&
-           date.getDate() === today.getDate();
+    const t = new Date();
+    t.setHours(0, 0, 0, 0);
+    return date.getTime() === t.getTime();
   }
 
   isSelected(date) {
@@ -159,17 +192,15 @@ class Calendar {
   }
 
   formatDate(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}.${month}.${day}`;
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}.${m}.${d}`;
   }
 }
 
-// 달력 초기화
+// 달력 초기화 (중복 로직 없이 이것만!)
 document.addEventListener('DOMContentLoaded', () => {
   const dateInput = document.getElementById('delivery-date');
-  if (dateInput) {
-    new Calendar(dateInput);
-  }
+  if (dateInput) new Calendar(dateInput);
 });

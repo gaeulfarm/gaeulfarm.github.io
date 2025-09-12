@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/slider.css" />
   <link rel="stylesheet" href="css/product.css" />
   <link rel="stylesheet" href="css/form.css" />
+  <link rel="stylesheet" href="css/calendar.css" />
 
     <!-- 다음 주소 API -->
   <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -79,7 +80,7 @@
             <!-- 2kg 카드 -->
             <article class="option-card" data-product="2kg">
             <header class="option-header">
-                <h4 class="option-title">2kg(3-4수)</h4>
+                <h4 class="option-title">2kg (3-4수)</h4>
                 <span class="option-price">25,000원</span>
             </header>
             <div class="option-body">
@@ -98,7 +99,7 @@
             <!-- 4kg 카드 -->
             <article class="option-card" data-product="4kg">
             <header class="option-header">
-                <h4 class="option-title">4kg(5-6수)</h4>
+                <h4 class="option-title">4kg (5-6수)</h4>
                 <span class="option-price">45,000원</span>
             </header>
             <div class="option-body">
@@ -136,7 +137,7 @@
       
       <h2>주문자 정보</h2>
       <div class="name-notice">
-        ※ 가을이네 농장 지인 확인용입니다. 수령인과 달라도 괜찮습니다!
+        ※ 수령인과 달라도 상관없으니 주문자 본인의 정보를 입력해주세요.
       </div>
        <input type="text" id="order-name" name="order-name" placeholder="이름" required />
        <input type="tel" id="order-phone" name="order-phone" placeholder="연락처" inputmode="tel" required />
@@ -167,18 +168,28 @@
        <hr />
 
       <h2>입금 계좌 정보</h2>
+      <div class="account-info">
+        <span id="bank-account">국민은행 123456-01-234567 (예금주: 김가을)</span>
+        <button type="button" class="copy-button" onclick="copyAccount()">복사</button>
+      </div>
+      <input type="text" id="depositor-name" name="depositor-name" placeholder="입금자명" required />
+      
+      <div class="account-notice">
+        알림톡이 따로 가지 않으니, 위의 계좌를 복사해둔 후 입금자명을 정확히 적어 입금해 주세요!
+      </div>
       
       <button type="submit" id="submitBtn" class="primary-action">예약하기</button>
      </form>
    </div>
 
   <script src="js/address.js"></script>
-   <script src="js/form.js"></script>
-   <script src="js/main.js"></script>
-   <script src="js/order.js"></script>
-   <script src="js/slider.js"></script>
-   <script src="js/submit.js"></script>
-   <script src="js/calendar.js"></script>
+  <script src="js/form.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/order.js"></script>
+  <script src="js/slider.js"></script>
+  <script src="js/submit.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/bank.js"></script>
    
  </body>
  </html>
