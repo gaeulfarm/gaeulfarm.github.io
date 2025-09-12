@@ -122,7 +122,7 @@
       <hr />
      <h2>주문 요약</h2>
       <div class="payment-notice">
-        ※ 아래 계좌로 입금 후 입금 확인이 되어야 배송이 가능합니다.
+        ※ 가장 아래에 적혀있는 계좌로 입금 후, 입금 확인이 되어야 배송이 가능합니다.
       </div>
       <div id="order-summary-list" class="order-summary-list" aria-live="polite">
         <!-- 담긴 항목들이 여기 렌더링됩니다 -->
@@ -133,10 +133,11 @@
       </div>
 
       <hr />
-      <h2>입금 계좌 정보</h2>
-      <hr />
-
+      
       <h2>주문자 정보</h2>
+      <div class="name-notice">
+        ※ 가을이네 농장 지인 확인용입니다. 수령인과 달라도 괜찮습니다!
+      </div>
        <input type="text" id="order-name" name="order-name" placeholder="이름" required />
        <input type="tel" id="order-phone" name="order-phone" placeholder="연락처" inputmode="tel" required />
 
@@ -148,7 +149,7 @@
       </label>
 
        <input type="text" id="recipient-name" name="recipient-name" placeholder="수령인" required />
-       <input type="tel" id="recipient-phone" name="recipient-phone" placeholder="연락처" inputmode="tel" required />
+       <input type="tel" id="recipient-phone" name="recipient-phone" placeholder="연락처 (배송 메세지 수신용)" inputmode="tel" required />
 
        <div class="address-row">
         <input type="text" id="sample6_postcode" placeholder="우편번호" required />
@@ -157,8 +158,16 @@
 
        <input type="text" id="sample6_address" placeholder="주소" required />
        <input type="text" id="sample6_detailAddress" placeholder="상세주소" required />
+       
+       <div class="delivery-date-row">
+         <input type="text" id="delivery-date" placeholder="배송 희망일" readonly required />
+         <small class="date-notice">* 주문일 기준 이틀 후부터 선택 가능합니다.</small>
+       </div>
 
        <hr />
+
+      <h2>입금 계좌 정보</h2>
+      
       <button type="submit" id="submitBtn" class="primary-action">예약하기</button>
      </form>
    </div>
@@ -169,6 +178,7 @@
    <script src="js/order.js"></script>
    <script src="js/slider.js"></script>
    <script src="js/submit.js"></script>
+   <script src="js/calendar.js"></script>
    
  </body>
  </html>

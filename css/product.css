@@ -45,7 +45,6 @@
 /* 예약 폼 */
 #reservation-form{
   display:none;
-  margin-top:20px;
   padding:20px;
   border:1px solid var(--border);
   border-radius:12px;
@@ -54,11 +53,10 @@
   box-shadow:var(--shadow);
 }
 #reservation-form h2{
-  margin:20px 0 10px;
   font-size:18px; color:#333; padding-bottom:6px;
 }
 input[type="text"], input[type="tel"], input[type="number"], input[type="button"]{
-  width:100%; padding:10px; margin-bottom:20px;
+  width:100%; padding:10px; margin-bottom:5px;
   border:1px solid var(--border); border-radius:8px; font-size:16px; height:44px;
 }
 input::placeholder{ color:#aaa }
@@ -67,8 +65,17 @@ input::placeholder{ color:#aaa }
 .address-row{ display:flex; gap:10px }
 #sample6_postcode{ flex:2 }
 .address-button{
-  flex:1; display:flex; align-items:center; justify-content:center; height:44px;
-  background:#f0f0f0; color:#333; border:1px solid var(--border); border-radius:8px; cursor:pointer;
+  flex:1; 
+  display:flex; 
+  align-items:center; 
+  justify-content:center; 
+  height:44px;
+  background:#f0f0f0; 
+  color:#333; 
+  border:1px solid var(--border); 
+  border-radius:8px; 
+  cursor:pointer;
+  font-size:14px;
 }
 .address-button:hover{ background:#e7e7e7 }
 
@@ -78,9 +85,6 @@ input::placeholder{ color:#aaa }
 }
 .order-summary p{ margin:8px 0; font-size:16px }
 .order-summary strong{ font-size:18px }
-
-/* 체크박스 */
-.same-as-order-label{ font-weight:400; display:block; margin-bottom:15px; accent-color:gray }
 
 /* 선 */
 hr{ border:none; border-top:1px solid var(--border); margin:20px 0 }
