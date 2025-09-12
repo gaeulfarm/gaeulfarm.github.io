@@ -145,6 +145,8 @@ button[type="submit"] {
   z-index: 1000;
   padding: 15px;
   margin-top: 5px;
+  box-sizing: border-box;
+  -webkit-transform: translateZ(0);
 }
 
 .calendar-header {
@@ -174,12 +176,15 @@ button[type="submit"] {
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-auto-rows: 34px;
   gap: 5px;
+  grid-gap: 5px;
   text-align: center;
 }
 
 .calendar-grid .weekday {
+  display:flex; align-items:center; justify-content:center;
   font-weight: 600;
   color: #333;
   padding: 5px;
@@ -187,10 +192,13 @@ button[type="submit"] {
 }
 
 .calendar-grid .date {
+  display:flex; align-items:center; justify-content:center;
   padding: 8px;
   cursor: pointer;
   border-radius: 4px;
   font-size: 14px;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 .calendar-grid .date:hover {
@@ -289,12 +297,13 @@ button[type="submit"] {
   margin-bottom: 5px;
 }
 
-.name-notice {
+#reservation-form .name-notice {
   color: #666;
   font-size: 0.8rem;
   text-align: left;
-  margin-top: -8px;
-  margin-bottom: 5px;
+  margin-top: 4px;
+  margin-bottom: 6px;
+  line-height: 1.4;
 }
 
 .date-notice {

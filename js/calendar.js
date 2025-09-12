@@ -33,6 +33,11 @@ class Calendar {
     this.popup = document.createElement('div');
     this.popup.className = 'calendar-popup';
     this.renderCalendar();
+    // iOS Safari에서 포커스/키보드로 인해 위치가 밀리지 않도록 부모에 상대 위치 보장
+    const parent = this.input.parentNode;
+    if (getComputedStyle(parent).position === 'static') {
+      parent.style.position = 'relative';
+    }
     this.input.parentNode.appendChild(this.popup);
   }
 

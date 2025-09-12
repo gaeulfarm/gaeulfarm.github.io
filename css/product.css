@@ -53,11 +53,18 @@
   box-shadow:var(--shadow);
 }
 #reservation-form h2{
-  font-size:18px; color:#333; padding-bottom:6px;
+  font-size:18px; 
+  color:#333; 
+  padding-bottom:6px;
 }
-input[type="text"], input[type="tel"], input[type="number"], input[type="button"]{
-  width:100%; padding:10px; margin-bottom:5px;
-  border:1px solid var(--border); border-radius:8px; font-size:16px; height:44px;
+input[type="text"], input[type="tel"], input[type="number"], input[type="button"]
+{
+  width:100%; 
+  padding-top: 10px;
+  border:1px solid var(--border); 
+  border-radius:8px; 
+  font-size:16px; 
+  height:44px;
 }
 input::placeholder{ color:#aaa }
 
