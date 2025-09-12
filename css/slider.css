@@ -1,5 +1,5 @@
 /* 이미지 슬라이더 */
-.product-image{ margin-top:8px }
+.product-image{ margin-top:0px }
 .image-slider{
   position:relative;
   width:100%;
@@ -7,7 +7,7 @@
   overflow:hidden;
   /* 세로 스크롤 허용, 가로 제스쳐는 JS에서 처리 */
   touch-action: pan-y;
-  border-radius:12px;
+  border-radius:0px; /* 각진사각형으로 변경 */
   background:#000; /* 이미지 로딩 전 배경 */
 }
 .slider-wrapper{

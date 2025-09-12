@@ -119,8 +119,11 @@
         <div id="selected-items" aria-live="polite"></div>
      </div>
 
-      <hr class="section-divider" />
+      <hr />
      <h2>주문 요약</h2>
+      <div class="payment-notice">
+        ※ 아래 계좌로 입금 후 입금 확인이 되어야 배송이 가능합니다.
+      </div>
       <div id="order-summary-list" class="order-summary-list" aria-live="polite">
         <!-- 담긴 항목들이 여기 렌더링됩니다 -->
       </div>
@@ -129,7 +132,10 @@
         <span id="total-price">0원</span>
       </div>
 
-      <hr class="section-divider" />
+      <hr />
+      <h2>입금 계좌 정보</h2>
+      <hr />
+
       <h2>주문자 정보</h2>
        <input type="text" id="order-name" name="order-name" placeholder="이름" required />
        <input type="tel" id="order-phone" name="order-phone" placeholder="연락처" inputmode="tel" required />

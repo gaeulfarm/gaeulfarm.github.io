@@ -104,7 +104,6 @@ body{
   overflow:hidden;
   /* 세로 스크롤 허용, 가로 제스쳐는 JS에서 처리 */
   touch-action: pan-y;
-  border-radius:12px;
   background:#000; /* 이미지 로딩 전 배경 */
 }
 .slider-wrapper{

@@ -53,6 +53,7 @@ button[type="submit"] {
   border: 1px solid #ddd;
   background: #fff;
   font-size: 18px;
+  color: #666; /* 회색으로 통일 */
 }
 .option-controls-row .opt-qty {
   width: 80%;
@@ -62,6 +63,16 @@ button[type="submit"] {
   border-radius: 6px; /* 모서리 둥글게 */
   font-weight: 400; /* 글자 굵게 */
   background: #fafafa;
+  /* 사파리에서 number input의 스피너 숨기기 */
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+}
+
+/* 사파리에서 number input의 스피너 숨기기 */
+.option-controls-row .opt-qty::-webkit-outer-spin-button,
+.option-controls-row .opt-qty::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* 담기 버튼은 전체 너비 */
@@ -77,7 +88,7 @@ button[type="submit"] {
 
 /* 섹션 구분선 */
 .section-divider {
-  margin: 40px 0px 20px 0px;
+  margin: 30px 0px 10px 0px;
   border: 0;
   height: 1px;
   background: #e6e6e6;
@@ -125,8 +136,10 @@ button[type="submit"] {
   display: flex; /* 가로 정렬 */
   justify-content: space-between; /* 양쪽 끝으로 배치 */
   align-items: center; /* 수직 중앙 정렬 */
-  padding: 8px 6px;
+  padding: 0px 6px; /* 상하 패딩을 동일하게 설정 */
   border-bottom: 1px solid #eee;
+  height: 40px; /* 고정 높이로 설정하여 완전한 일관성 확보 */
+  box-sizing: border-box; /* 패딩을 포함한 높이 계산 */
 }
 
 .summary-item:last-child {
@@ -137,19 +150,49 @@ button[type="submit"] {
   display: flex; /* 가로 정렬 */
   align-items: center; /* 수직 중앙 정렬 */
   gap: 12px; /* 상품명과 개수 사이 간격 */
+  line-height: 1; /* 줄 간격을 1로 설정하여 정확한 중앙 정렬 */
+  height: 100%; /* 부모 높이에 맞춤 */
 }
 
 .summary-name {
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .summary-qty {
   color: #666;
   font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
-.summary-right { display:flex; align-items:center; gap:10px; }
-.summary-delete { background: transparent; border: none; cursor: pointer; font-size: 16px; }
+.summary-right { 
+  display:flex; 
+  align-items:center; 
+  gap:10px; 
+  line-height: 1; /* 줄 간격을 1로 설정하여 정확한 중앙 정렬 */
+  height: 100%; /* 부모 높이에 맞춤 */
+}
+.summary-price {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  font-weight: 600;
+}
+
+.summary-delete { 
+  background: transparent; 
+  border: none; 
+  cursor: pointer; 
+  font-size: 16px; 
+  color: #666; 
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
 
 /* 총합 및 예약 버튼 */
 .order-summary-total {
@@ -159,6 +202,13 @@ button[type="submit"] {
   margin: 20px 50px 10px 15px;
   font-size:1.1rem;
   font-weight:700;
+}
+
+.payment-notice {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  text-align: left;
+  margin-top: -8px;
 }
 .primary-action {
   width:100%;
@@ -191,10 +241,23 @@ button[type="submit"] {
   .option-controls-row .opt-btn { width:40px; height:38px; }
   .option-controls-row .opt-qty { width:56px; height:38px; }
   .address-row input#sample6_postcode { flex-basis:60%; }
+  
+  /* 모바일에서 카드 내부 텍스트 세로 배치 */
+  .option-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .option-title {
+    font-size: 14px;
+  }
+  .option-price {
+    font-size: 13px;
+  }
 }
 @media (max-width: 768px) {
   .option-card {
-    flex: 1 1 100%; /* 모바일에서는 너비를 100%로 설정 */
-    max-width: 100%; /* 최대 너비 설정 */
+    flex: 1 1 calc(50% - 8px); /* 모바일에서도 가로 배치 유지 */
+    max-width: calc(50% - 8px); /* 최대 너비 설정 */
   }
 }

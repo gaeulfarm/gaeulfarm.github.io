@@ -73,11 +73,17 @@ sliderWrapper.addEventListener('transitionend', () => {
   setActiveDot();
 });
 
+// 터치 이벤트와 포인터 이벤트 모두 지원
 sliderWrapper.addEventListener('pointerdown', onPointerDown, { passive: true });
 sliderWrapper.addEventListener('pointermove', onPointerMove, { passive: false });
 sliderWrapper.addEventListener('pointerup', onPointerUp);
 sliderWrapper.addEventListener('pointercancel', onPointerUp);
 sliderWrapper.addEventListener('pointerleave', (e) => { if (isDragging) onPointerUp(e); });
+
+// 터치 이벤트 추가 (모바일 지원)
+sliderWrapper.addEventListener('touchstart', onTouchStart, { passive: true });
+sliderWrapper.addEventListener('touchmove', onTouchMove, { passive: false });
+sliderWrapper.addEventListener('touchend', onTouchEnd);
 
 function onPointerDown(e) {
   isDragging = true;
@@ -96,6 +102,37 @@ function onPointerMove(e) {
 }
 
 function onPointerUp() {
+  if (!isDragging) return;
+  isDragging = false;
+  const moved = currentTranslate - startTranslate;
+
+  const threshold = Math.min(80, slideWidth * 0.12);
+  if (moved < -threshold && currentIndex < slides.length - 1) {
+    next();
+  } else if (moved > threshold && currentIndex > 0) {
+    prev();
+  } else {
+    setTranslate(-currentIndex * slideWidth, true);
+  }
+}
+
+// 터치 이벤트 핸들러
+function onTouchStart(e) {
+  isDragging = true;
+  startX = e.touches[0].clientX;
+  startTranslate = currentTranslate;
+  sliderWrapper.style.transition = 'none';
+}
+
+function onTouchMove(e) {
+  if (!isDragging) return;
+  e.preventDefault();
+  currentX = e.touches[0].clientX;
+  const delta = currentX - startX;
+  setTranslate(startTranslate + delta, false);
+}
+
+function onTouchEnd() {
   if (!isDragging) return;
   isDragging = false;
   const moved = currentTranslate - startTranslate;
