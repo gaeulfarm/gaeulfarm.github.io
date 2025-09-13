@@ -17,7 +17,7 @@ function renderSummary() {
   const items = Object.values(orderItems);
   summaryListEl.innerHTML = '';
   if (items.length === 0) {
-    summaryListEl.innerHTML = '<p class="empty">아직 담긴 상품이 없습니다.</p>';
+    summaryListEl.innerHTML = '<p class="empty"> 아직 담긴 상품이 없습니다.</p>';
     totalPriceEl.textContent = formatCurrency(0);
     return;
   }

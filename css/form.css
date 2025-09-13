@@ -101,12 +101,12 @@ button[type="submit"] {
   align-items: center; /* 위쪽 정렬 */
   gap: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 0.8rem;
   margin-top: -12px;
 }
 .same-as-order input[type="checkbox"] {
-  width: 12px;
-  height: 12px;
+  width: 0.8rem;
+  height: 0.8rem;
   accent-color: gray; /* 체크박스 색상 */
 }
 
@@ -305,7 +305,6 @@ button[type="submit"] {
   gap: 8px; /* 계좌 정보와 버튼 사이 간격 */
   font-size: 1rem;
   margin-bottom: 12px;
-  margin-left: 5px;
   font-weight: 600;
 }
 
