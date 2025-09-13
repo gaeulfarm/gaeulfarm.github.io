@@ -26,22 +26,20 @@
   <div class="container">
     <!-- 이미지 슬라이더 -->
     <section class="product-image" aria-label="상품 이미지">
-      <div class="image-slider" id="slider" aria-roledescription="carousel">
-        <div class="slider-wrapper" id="sliderWrapper">
-          <!-- 순서: [마지막 복제] [실제 1..N] [첫 복제] -->
-          <img src="img/4.jpg" alt="포도4" class="slide clone" />
-          <img src="img/dogAndShine.jpg" alt="포도 대표" class="slide" />
-          <img src="img/1.jpg" alt="포도1" class="slide" />
-          <img src="img/2.jpg" alt="포도2" class="slide" />
-          <img src="img/3.jpg" alt="포도3" class="slide" />
-          <img src="img/4.jpg" alt="포도4" class="slide" />
-          <img src="img/dogAndShine.jpg" alt="포도 대표" class="slide clone" />
+      <div class="image-slider" aria-roledescription="carousel">
+        <div class="viewport" id="viewport">
+          <div class="track" id="track">
+            <div class="slide"><img src="img/dogAndShine.jpg" alt="포도 대표" /></div>
+            <div class="slide"><img src="img/1.jpg" alt="포도1" /></div>
+            <div class="slide"><img src="img/2.jpg" alt="포도2" /></div>
+            <div class="slide"><img src="img/3.jpg" alt="포도3" /></div>
+            <div class="slide"><img src="img/4.jpg" alt="포도4" /></div>
+          </div>
+          <button class="nav prev" id="prevBtn" aria-label="이전">‹</button>
+          <button class="nav next" id="nextBtn" aria-label="다음">›</button>
         </div>
-
-        <button class="arrow left-arrow" aria-label="이전 이미지" id="prevBtn" type="button">‹</button>
-        <button class="arrow right-arrow" aria-label="다음 이미지" id="nextBtn" type="button">›</button>
+        <div class="indicators" id="indicators" aria-hidden="true"></div>
       </div>
-      <div class="indicators" id="indicators" aria-hidden="true"></div>
     </section>
 
     <!-- 상품 설명 -->
