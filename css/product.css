@@ -23,7 +23,7 @@
   color: #e74c3c;
 }
 .shipping-info img{
-  width: 70%; 
+  width: 95%; 
   max-width: 900px; /* 최대 너비 제한 */
   height: auto; /* 비율 유지 */
   border-radius: 8px; 
