@@ -1,10 +1,10 @@
 /* 상품 설명 */
-.product-description{ margin-top:20px }
-.product-description h2{ font-size:24px; font-weight:700 }
-.product-item{ margin-bottom:20px }
+.product-description h1{ font-size: 1.7rem; font-weight: 700;}
+.product-description h2{ font-size:1.4rem; font-weight:700; margin-top: 30px; margin-bottom: 0px;}
+.product-item{ margin-bottom:80px }
 .product-item h3{ font-size:20px; font-weight:700 }
-.product-item img{ width:45%; margin:5px; border-radius:8px; box-shadow:var(--shadow) }
-.note{ color:gray; font-size:14px }
+.product-item img{ width:45%; margin:5px; border-radius:0px; box-shadow:var(--shadow); margin-top: 10px; }
+.note{ color:gray; font-size:0.9rem; margin-top:8px;}
 
 /* 주문 아이템 */
 #order-items{ margin-bottom:20px }
@@ -194,7 +194,8 @@ body.form-open .container{ padding-bottom:90px }
   font-size: 1.7rem;
   text-align: center;
   margin-top: 100px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
+  font-weight: 700;
   color: #333;
 }
 
