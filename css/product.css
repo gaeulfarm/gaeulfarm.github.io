@@ -182,3 +182,34 @@ body.form-open .container{ padding-bottom:90px }
   font-weight:700;
 }
 .add-option:hover{ background:#402d26 }
+
+/* 상품 후기 섹션 */
+.product-reviews {
+  max-width: 900px; /* 이미지 슬라이더와 동일한 가로 크기 */
+  margin: 0 auto; /* 중앙 정렬 */
+  padding: 20px;
+}
+
+.product-reviews h2 {
+  font-size: 1.7rem;
+  text-align: center;
+  margin-top: 100px;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.review-image,
+.size-image {
+  display: flex;
+  justify-content: center; /* 중앙 정렬 */
+  margin-bottom: 20px;
+}
+
+.review-image img,
+.size-image img {
+  width: 100%; /* 가로 크기 조정 */
+  max-width: 900px; /* 최대 너비 제한 */
+  height: auto; /* 비율 유지 */
+  border-radius: 0px; /* 모서리 둥글게 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 */
+}
