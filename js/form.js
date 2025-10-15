@@ -5,10 +5,7 @@ document.getElementById('same-as-order').addEventListener('change', function(){
   }
 });
 
-document.getElementById('reservation-form').addEventListener('submit',(e)=>{
-  e.preventDefault();
-  alert("예약이 완료되었습니다 ✅");
-});
+// 기존 submit 이벤트 리스너 제거 - submit.js에서 처리
 
 /**************************
  * 구매하기 버튼 → 주문서 폼 열기

@@ -321,3 +321,69 @@ button[type="submit"] {
 .copy-button:hover {
   background: #e6e6e6; /* 호버 시 더 진한 회색 */
 }
+
+/* 에러 메시지 스타일 */
+.error-message {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  display: none;
+  font-weight: 500;
+}
+
+.error-message.show {
+  display: block;
+}
+
+/* 에러 상태의 입력 필드 */
+.form-field.error input,
+.form-field.error select {
+  border-color: #e74c3c;
+  background-color: #fdf2f2;
+}
+
+/* 에러 상태의 입력 필드에 포커스 */
+.form-field.error input:focus,
+.form-field.error select:focus {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+  outline: none;
+}
+
+/* 폼 필드 래퍼 */
+.form-field {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+/* 전체 에러 메시지 (상단에 표시) */
+.form-error-summary {
+  background-color: #fdf2f2;
+  border: 1px solid #e74c3c;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 20px;
+  display: none;
+}
+
+.form-error-summary.show {
+  display: block;
+}
+
+.form-error-summary h4 {
+  color: #e74c3c;
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.form-error-summary ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #c0392b;
+}
+
+.form-error-summary li {
+  margin-bottom: 4px;
+}

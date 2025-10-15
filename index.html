@@ -49,7 +49,7 @@
       <h1>상품 설명</h1>
 
       <div class="product-item">
-        <h2>2kg 3-4수 (25,000원)</h2>
+        <h2>2kg 3-4수 (17,000원)</h2>
         <p class="note">※ 배송비 포함 가격입니다.</p>
         <img src="img/2kg_box.jpg" alt="2kg 박스" />
         <img src="img/2kg_package.jpg" alt="2kg 포장" />
@@ -57,7 +57,7 @@
       </div>
 
       <div class="product-item">
-        <h2>4kg 5-6수 (45,000원)</h2>
+        <h2>4kg 5-6수 (30,000원)</h2>
         <p class="note">※ 배송비 포함 가격입니다.</p>
         <img src="img/4kg_package.jpg" alt="4kg 포장" />
         <p class="note">※ 택배 배송 시 위 사진과 같이 에어백 포장하여 보내드립니다.</p>
@@ -75,7 +75,7 @@
       <div class="review-image">
         <img src="img/review.jpg" alt="구매후기" />
       </div>
-      <h3>🍇 포도 실제 사이즈 🍇</h3>
+      <h3>🍇 사진 후기 🍇</h3>
       <div class="size-image">
         <img src="img/size.jpg" alt="샤인 실제 사이즈" />
       </div>
@@ -96,6 +96,12 @@
     <!-- 예약 폼 -->
     <form id="reservation-form" novalidate>
       <h2 class="order-header">📋 주문서 </h2>
+      
+      <!-- 에러 메시지 요약 -->
+      <div id="form-error-summary" class="form-error-summary">
+        <h4>입력 정보를 확인해주세요</h4>
+        <ul id="error-list"></ul>
+      </div>
       <h2 class="section-title">주문 상품 정보</h2>
 
       <div id="order-items">
@@ -104,7 +110,7 @@
             <article class="option-card" data-product="2kg">
             <header class="option-header">
                 <h4 class="option-title">2kg (3-4수)</h4>
-                <span class="option-price">25,000원</span>
+                <span class="option-price">17,000원</span>
             </header>
             <div class="option-body">
                 <p class="option-desc">배송비 포함</p>
@@ -123,7 +129,7 @@
             <article class="option-card" data-product="4kg">
             <header class="option-header">
                 <h4 class="option-title">4kg (5-6수)</h4>
-                <span class="option-price">45,000원</span>
+                <span class="option-price">30,000원</span>
             </header>
             <div class="option-body">
                 <p class="option-desc">배송비 포함</p>
@@ -162,8 +168,14 @@
       <div class="name-notice">
         ※ 수령인과 달라도 상관없으니 주문자 본인의 정보를 입력해주세요.
       </div>
-       <input type="text" id="order-name" name="order-name" placeholder="이름" required />
-       <input type="tel" id="order-phone" name="order-phone" placeholder="연락처" inputmode="tel" required />
+      <div class="form-field">
+        <input type="text" id="order-name" name="order-name" placeholder="이름" required />
+        <div class="error-message" id="order-name-error"></div>
+      </div>
+      <div class="form-field">
+        <input type="tel" id="order-phone" name="order-phone" placeholder="연락처" inputmode="tel" required />
+        <div class="error-message" id="order-phone-error"></div>
+      </div>
 
        <hr />
 
@@ -172,21 +184,39 @@
         <input type="checkbox" id="same-as-order" /> <span>주문자 정보와 동일</span>
       </label>
 
-       <input type="text" id="recipient-name" name="recipient-name" placeholder="수령인" required />
-       <input type="tel" id="recipient-phone" name="recipient-phone" placeholder="연락처 (배송 메세지 수신용)" inputmode="tel" required />
+      <div class="form-field">
+        <input type="text" id="recipient-name" name="recipient-name" placeholder="수령인" required />
+        <div class="error-message" id="recipient-name-error"></div>
+      </div>
+      <div class="form-field">
+        <input type="tel" id="recipient-phone" name="recipient-phone" placeholder="연락처 (배송 메세지 수신용)" inputmode="tel" required />
+        <div class="error-message" id="recipient-phone-error"></div>
+      </div>
 
-       <div class="address-row">
-        <input type="text" id="sample6_postcode" placeholder="우편번호" required />
-        <button type="button" class="address-button" id="addrBtn">주소찾기</button>
-       </div>
+      <div class="form-field">
+        <div class="address-row">
+          <input type="text" id="sample6_postcode" placeholder="우편번호" required />
+          <button type="button" class="address-button" id="addrBtn">주소찾기</button>
+        </div>
+        <div class="error-message" id="sample6_postcode-error"></div>
+      </div>
 
-       <input type="text" id="sample6_address" placeholder="주소" required />
-       <input type="text" id="sample6_detailAddress" placeholder="상세주소" required />
+      <div class="form-field">
+        <input type="text" id="sample6_address" placeholder="주소" required />
+        <div class="error-message" id="sample6_address-error"></div>
+      </div>
+      <div class="form-field">
+        <input type="text" id="sample6_detailAddress" placeholder="상세주소" required />
+        <div class="error-message" id="sample6_detailAddress-error"></div>
+      </div>
        
-       <div class="delivery-date-row">
-         <input type="text" id="delivery-date" placeholder="배송 희망일" readonly required />
-         <small class="date-notice">* 주문일 기준 이틀 후부터 선택 가능합니다.</small>
-       </div>
+      <div class="form-field">
+        <div class="delivery-date-row">
+          <input type="text" id="delivery-date" placeholder="수령 희망일" readonly required />
+          <small class="date-notice">* 주문일 기준 이틀 후부터 선택 가능합니다.</small>
+        </div>
+        <div class="error-message" id="delivery-date-error"></div>
+      </div>
 
        <hr />
 
@@ -195,7 +225,10 @@
         <span id="bank-account">국민은행 366210097344 (예금주: 배윤주)</span>
         <button type="button" class="copy-button" onclick="copyAccount()">복사</button>
       </div>
-      <input type="text" id="depositor-name" name="depositor-name" placeholder="입금자명" required />
+      <div class="form-field">
+        <input type="text" id="depositor-name" name="depositor-name" placeholder="입금자명" required />
+        <div class="error-message" id="depositor-name-error"></div>
+      </div>
       
       <div class="account-notice">
         알림톡이 따로 가지 않으니, 위의 계좌를 복사해둔 후 입금자명을 정확히 적어 입금해 주세요!
@@ -210,6 +243,7 @@
   <script src="js/main.js"></script>
   <script src="js/order.js"></script>
   <script src="js/slider.js"></script>
+  <script src="js/validation.js"></script>
   <script src="js/submit.js"></script>
   <script src="js/calendar.js"></script>
   <script src="js/bank.js"></script>
