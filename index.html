@@ -96,12 +96,6 @@
     <!-- 예약 폼 -->
     <form id="reservation-form" novalidate>
       <h2 class="order-header">📋 주문서 </h2>
-      
-      <!-- 에러 메시지 요약 -->
-      <div id="form-error-summary" class="form-error-summary">
-        <h4>입력 정보를 확인해주세요</h4>
-        <ul id="error-list"></ul>
-      </div>
       <h2 class="section-title">주문 상품 정보</h2>
 
       <div id="order-items">
@@ -170,7 +164,6 @@
       </div>
       <div class="form-field">
         <input type="text" id="order-name" name="order-name" placeholder="이름" required />
-        <div class="error-message" id="order-name-error"></div>
       </div>
       <div class="form-field">
         <input type="tel" id="order-phone" name="order-phone" placeholder="연락처" inputmode="tel" required />
@@ -186,7 +179,6 @@
 
       <div class="form-field">
         <input type="text" id="recipient-name" name="recipient-name" placeholder="수령인" required />
-        <div class="error-message" id="recipient-name-error"></div>
       </div>
       <div class="form-field">
         <input type="tel" id="recipient-phone" name="recipient-phone" placeholder="연락처 (배송 메세지 수신용)" inputmode="tel" required />
@@ -198,16 +190,13 @@
           <input type="text" id="sample6_postcode" placeholder="우편번호" required />
           <button type="button" class="address-button" id="addrBtn">주소찾기</button>
         </div>
-        <div class="error-message" id="sample6_postcode-error"></div>
       </div>
 
       <div class="form-field">
         <input type="text" id="sample6_address" placeholder="주소" required />
-        <div class="error-message" id="sample6_address-error"></div>
       </div>
       <div class="form-field">
         <input type="text" id="sample6_detailAddress" placeholder="상세주소" required />
-        <div class="error-message" id="sample6_detailAddress-error"></div>
       </div>
        
       <div class="form-field">
@@ -215,7 +204,6 @@
           <input type="text" id="delivery-date" placeholder="수령 희망일" readonly required />
           <small class="date-notice">* 주문일 기준 이틀 후부터 선택 가능합니다.</small>
         </div>
-        <div class="error-message" id="delivery-date-error"></div>
       </div>
 
        <hr />
@@ -227,7 +215,6 @@
       </div>
       <div class="form-field">
         <input type="text" id="depositor-name" name="depositor-name" placeholder="입금자명" required />
-        <div class="error-message" id="depositor-name-error"></div>
       </div>
       
       <div class="account-notice">
