@@ -56,7 +56,7 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
   submitBtn.textContent = '처리 중...';
 
   try {
-    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwPanCSYwzbpfpfwbgppaMvXcehNreXViZYjvH3KkrrqrZNlfxvFpBKiVl1GJxWjkYM3A/https://script.google.com/macros/s/AKfycbwPanCSYwzbpfpfwbgppaMvXcehNreXViZYjvH3KkrrqrZNlfxvFpBKiVl1GJxWjkYM3A/exec?gid=https://script.google.com/macros/s/AKfycbwPanCSYwzbpfpfwbgppaMvXcehNreXViZYjvH3KkrrqrZNlfxvFpBKiVl1GJxWjkYM3A/exec?gid=0';
+    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwPanCSYwzbpfpfwbgppaMvXcehNreXViZYjvH3KkrrqrZNlfxvFpBKiVl1GJxWjkYM3A/exec?gid=0';
     
     // JSONP 방식으로 폼 제출
     const form = document.createElement('form');
