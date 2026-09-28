@@ -53,7 +53,7 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
   const submitBtn = document.getElementById('submitBtn');
   const originalText = submitBtn.textContent;
   submitBtn.disabled = true;
-  submitBtn.textContent = '처리 중...';
+  submitBtn.textContent = '처리 중... 나가지말고 기다려주세요...';
 
   // 인스타그램 등 인앱 브라우저는 alert()를 막는 경우가 있어 화면에 직접 표시한다
   const statusEl = document.getElementById('submit-status');
