@@ -50,15 +50,16 @@
 
 /* 하단 구매하기 배너 */
 .buy-banner {
-  background-color: #81c147; 
-  position: fixed; 
-  bottom: 0; 
-  left: 0; 
-  width: 100%; 
-  padding: 10px 0; 
-  text-align: center; 
-  z-index: 1000; 
-  cursor: pointer; 
+  background-color: #81c147;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  text-align: center;
+  z-index: 1000;
+  cursor: pointer;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
@@ -67,11 +68,13 @@
 }
 
 .buy-button {
-  display: block; 
-  font-size: 20px; 
-  color: white; 
-  text-decoration: none; 
-  font-weight: bold; 
-  width: 100%; 
+  display: block;
+  font-size: 20px;
+  line-height: 1.2;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  width: 100%;
+  box-sizing: border-box;
   padding: 10px 0;
 }

@@ -76,7 +76,7 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
     const data = await res.json().catch(() => ({}));
     
     if (res.ok && (data?.success !== false)) {
-      showStatus('✅ 예약이 성공적으로 완료되었습니다! 입금 확인 후 배송이 시작됩니다.', true);
+      showStatus('✅ 예약이 성공적으로 완료되었습니다!\n 입금 확인이 되어야 배송준비가 시작됩니다.', true);
 
       // 폼 초기화
       document.getElementById('reservation-form').reset();
