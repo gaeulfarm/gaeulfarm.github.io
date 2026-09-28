@@ -1,7 +1,7 @@
 /**************************
  * 주문 아이템 및 합계 (재작성)
  **************************/
-const itemPrices = { "2kg": 25000, "4kg": 45000 };
+const itemPrices = { "2kg": 16000, "4kg": 27000 };
 const orderItems = {}; // key: product, value: { product, name, qty, unitPrice }
 window.orderItems = orderItems; // submit.js에서 사용 가능
 
