@@ -73,7 +73,8 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
   statusEl.classList.remove('is-success', 'is-error');
 
   try {
-    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxF7LAt3jgpnjyL4lt79sbzPjO4ZbDvQiyo_hBzJFIdd7PXPWEeVXJujB5nLASfvxCg/exec';
+    //const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxF7LAt3jgpnjyL4lt79sbzPjO4ZbDvQiyo_hBzJFIdd7PXPWEeVXJujB5nLASfvxCg/exec';
+    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbz0b4HHj0i4_ZLEnEhcS8b9MtWzsNxWkqNp1HVRLKbZb_L3g6rC1Cy9ZqdMWYKcxCjQ/exec';
     const query = new URLSearchParams(payload).toString();
 
     const res = await fetch(`${WEBHOOK_URL}?${query}`, {
