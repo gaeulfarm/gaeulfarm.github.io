@@ -257,6 +257,32 @@ button[type="submit"] {
   font-weight:700;
 }
 
+.submit-status {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: center;
+  display: none;
+  white-space: pre-line;
+}
+
+.submit-status.is-success,
+.submit-status.is-error {
+  display: block;
+}
+
+.submit-status.is-success {
+  background: #eaf6ea;
+  color: #2f7a2f;
+}
+
+.submit-status.is-error {
+  background: #fdeaea;
+  color: #c0392b;
+}
+
 /* 주문 상품 정보 박스 가로 정렬 */
 .product-picker {
   display: flex; /* 가로 정렬 */

@@ -55,6 +55,16 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
   submitBtn.disabled = true;
   submitBtn.textContent = '처리 중...';
 
+  // 인스타그램 등 인앱 브라우저는 alert()를 막는 경우가 있어 화면에 직접 표시한다
+  const statusEl = document.getElementById('submit-status');
+  const showStatus = (message, isSuccess) => {
+    statusEl.textContent = message;
+    statusEl.classList.toggle('is-success', isSuccess);
+    statusEl.classList.toggle('is-error', !isSuccess);
+  };
+  statusEl.textContent = '';
+  statusEl.classList.remove('is-success', 'is-error');
+
   try {
     const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxF7LAt3jgpnjyL4lt79sbzPjO4ZbDvQiyo_hBzJFIdd7PXPWEeVXJujB5nLASfvxCg/exec';
     const query = new URLSearchParams(payload).toString();
@@ -66,8 +76,8 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
     const data = await res.json().catch(() => ({}));
     
     if (res.ok && (data?.success !== false)) {
-      alert('✅ 예약이 성공적으로 완료되었습니다!\n\n입금 확인 후 배송이 시작됩니다.');
-      
+      showStatus('✅ 예약이 성공적으로 완료되었습니다! 입금 확인 후 배송이 시작됩니다.', true);
+
       // 폼 초기화
       document.getElementById('reservation-form').reset();
       // 주문 요약도 초기화
@@ -76,10 +86,10 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
     } else {
       throw new Error(data?.message || '서버 오류가 발생했습니다.');
     }
-    
+
   } catch (err) {
     console.error('제출 오류:', err);
-    alert('❌ 예약에 실패했습니다.\n\n다시 시도해 주세요.');
+    showStatus('❌ 예약에 실패했습니다. 다시 시도해 주세요.', false);
   } finally {
     // 제출 버튼 복원
     submitBtn.disabled = false;
