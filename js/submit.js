@@ -61,6 +61,7 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
     statusEl.textContent = message;
     statusEl.classList.toggle('is-success', isSuccess);
     statusEl.classList.toggle('is-error', !isSuccess);
+    statusEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
   };
   statusEl.textContent = '';
   statusEl.classList.remove('is-success', 'is-error');
