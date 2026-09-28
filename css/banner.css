@@ -56,7 +56,7 @@
   left: 0;
   width: 100%;
   box-sizing: border-box;
-  padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  padding: 6px 12px calc(6px + env(safe-area-inset-bottom));
   text-align: center;
   z-index: 1000;
   cursor: pointer;
@@ -69,12 +69,12 @@
 
 .buy-button {
   display: block;
-  font-size: 20px;
+  font-size: 17px;
   line-height: 1.2;
   color: white;
   text-decoration: none;
   font-weight: bold;
   width: 100%;
   box-sizing: border-box;
-  padding: 10px 0;
+  padding: 8px 0;
 }
