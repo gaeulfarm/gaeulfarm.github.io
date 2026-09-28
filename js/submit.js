@@ -56,34 +56,27 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
   submitBtn.textContent = '처리 중...';
 
   try {
-    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbwPanCSYwzbpfpfwbgppaMvXcehNreXViZYjvH3KkrrqrZNlfxvFpBKiVl1GJxWjkYM3A/exec?gid=0';
+    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxF7LAt3jgpnjyL4lt79sbzPjO4ZbDvQiyo_hBzJFIdd7PXPWEeVXJujB5nLASfvxCg/exec?gid=0';
     
-    // JSONP 방식으로 폼 제출
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = WEBHOOK_URL;
-    form.target = '_blank'; // 새 탭에서 결과 표시
+    const res = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
     
-    // 데이터를 hidden input으로 추가
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'data';
-    input.value = JSON.stringify(payload);
-    form.appendChild(input);
+    const data = await res.json().catch(() => ({}));
     
-    // 폼 제출
-    document.body.appendChild(form);
-    form.submit();
-    document.body.removeChild(form);
-    
-    // 성공 메시지 표시
-    alert('✅ 예약이 성공적으로 완료되었습니다!\n\n입금 확인 후 배송이 시작됩니다.');
-    
-    // 폼 초기화
-    document.getElementById('reservation-form').reset();
-    // 주문 요약도 초기화
-    document.getElementById('order-summary-list').innerHTML = '';
-    document.getElementById('total-price').textContent = '0원';
+    if (res.ok && (data?.success !== false)) {
+      alert('✅ 예약이 성공적으로 완료되었습니다!\n\n입금 확인 후 배송이 시작됩니다.');
+      
+      // 폼 초기화
+      document.getElementById('reservation-form').reset();
+      // 주문 요약도 초기화
+      document.getElementById('order-summary-list').innerHTML = '';
+      document.getElementById('total-price').textContent = '0원';
+    } else {
+      throw new Error(data?.message || '서버 오류가 발생했습니다.');
+    }
     
   } catch (err) {
     console.error('제출 오류:', err);
