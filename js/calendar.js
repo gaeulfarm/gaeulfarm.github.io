@@ -1,4 +1,14 @@
 // js/calendar.js
+
+// 매년 날짜가 고정된 공휴일 (MM-DD)
+const FIXED_HOLIDAYS = ['01-01', '03-01', '05-05', '06-06', '08-15', '10-03', '10-09', '12-25'];
+
+// 설날/추석 연휴, 부처님오신날, 대체공휴일 등 매년 날짜가 바뀌는 공휴일은
+// 공식 달력을 확인해서 'YYYY-MM-DD' 형식으로 이 목록에 추가하세요.
+const VARIABLE_HOLIDAYS = [
+  '2026-10-05'
+];
+
 class Calendar {
   constructor(inputElement, options = {}) {
     this.input = inputElement;
@@ -6,6 +16,7 @@ class Calendar {
     this.selectedDate = null;
     this.currentDate = new Date();
     this.minDate = options.minDate || this.getMinDate();
+    this.maxDate = options.maxDate || this.getMaxDate();
     this.weekdays = options.weekdays || ['일', '월', '화', '수', '목', '금', '토'];
 
     // 바인딩(나중에 removeEventListener용)
@@ -19,6 +30,10 @@ class Calendar {
     d.setDate(d.getDate() + 2); // 주문일 기준 2일 후부터 선택 가능
     d.setHours(0, 0, 0, 0);
     return d;
+  }
+
+  getMaxDate() {
+    return new Date(2026, 11, 1); // 2026년 12월부터는 포도 시즌 종료로 선택 불가
   }
 
   init() {
@@ -128,7 +143,7 @@ class Calendar {
       if (this.isToday(dateObj)) el.classList.add('today');
       if (this.isSelected(dateObj)) el.classList.add('selected');
 
-      if (dateObj < this.minDate) {
+      if (dateObj < this.minDate || dateObj >= this.maxDate || this.isWeekend(dateObj) || this.isHoliday(dateObj)) {
         el.classList.add('disabled');
       } else {
         el.addEventListener('click', (e) => {
@@ -176,6 +191,19 @@ class Calendar {
     // 선택 이벤트를 외부에서 감지할 수 있게
     this.input.dispatchEvent(new Event('change'));
     this.hideCalendar();
+  }
+
+  isWeekend(date) {
+    const day = date.getDay();
+    return day === 0 || day === 6;
+  }
+
+  isHoliday(date) {
+    const mmdd = `${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    if (FIXED_HOLIDAYS.includes(mmdd)) return true;
+
+    const ymd = `${date.getFullYear()}-${mmdd}`;
+    return VARIABLE_HOLIDAYS.includes(ymd);
   }
 
   isToday(date) {

@@ -93,5 +93,12 @@ summaryListEl.addEventListener('click', (e) => {
   }
 });
 
+// 주문 완료 후 담긴 상품을 완전히 초기화 (submit.js에서 사용)
+function resetOrderItems() {
+  Object.keys(orderItems).forEach(key => delete orderItems[key]);
+  renderSummary();
+}
+window.resetOrderItems = resetOrderItems;
+
 // 초기 렌더
 renderSummary();

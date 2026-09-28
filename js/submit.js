@@ -80,9 +80,8 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
 
       // 폼 초기화
       document.getElementById('reservation-form').reset();
-      // 주문 요약도 초기화
-      document.getElementById('order-summary-list').innerHTML = '';
-      document.getElementById('total-price').textContent = '0원';
+      // 주문 요약도 초기화 (담긴 상품 데이터까지 완전히 비움)
+      resetOrderItems();
     } else {
       throw new Error(data?.message || '서버 오류가 발생했습니다.');
     }
