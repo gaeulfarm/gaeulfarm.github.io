@@ -34,8 +34,14 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
   const detailAddress = document.getElementById('sample6_detailAddress').value.trim();
   const fullAddress = baseAddress + (detailAddress ? ' ' + detailAddress : '');
 
+  // 제출 시점 타임스탬프 생성 (YYYY.MM.DD HH:mm:ss)
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, '0');
+  const timestamp = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+
   // 구글 시트 컬럼 구조에 맞는 데이터 생성 (웹훅이 쿼리 파라미터로 값을 받음)
   const payload = {
+    "타임스탬프": timestamp,
     "2kg박스": qty2kg.toString(),
     "4kg박스": qty4kg.toString(),
     "주문자이름": document.getElementById('order-name').value.trim(),
