@@ -16,14 +16,14 @@ const KAKAO_REST_API_KEY = 'YOUR_KAKAO_REST_API_KEY';
 const KAKAO_REDIRECT_URI = 'YOUR_WEB_APP_EXEC_URL';
 
 /**
- * 주문 폼에서 보낸 데이터를 저장하고, 카카오톡으로 알림을 보낸다.
+ * 주문 폼에서 쿼리 파라미터로 보낸 데이터를 저장하고, 카카오톡으로 알림을 보낸다.
+ * (프런트엔드가 body 없이 ?2kg박스=..&4kg박스=.. 형태의 쿼리스트링으로 POST 요청을 보낸다)
  */
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
-    const gid = e.parameter.gid || '0';
+    const data = e.parameter;
 
-    appendOrderRow(gid, data);
+    appendOrderRow(data);
     sendKakaoToMe(data);
 
     return ContentService.createTextOutput(JSON.stringify({ success: true }))
@@ -35,25 +35,21 @@ function doPost(e) {
 }
 
 /**
- * gid(시트탭 ID)로 대상 시트를 찾아 컬럼 순서대로 한 행을 추가한다.
- * 일치하는 gid가 없으면 첫 번째 시트에 기록한다.
+ * 스프레드시트 첫 번째 시트에 컬럼 순서대로 한 행을 추가한다.
  */
-function appendOrderRow(gid, data) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sheet = ss.getSheets().find(sh => String(sh.getSheetId()) === String(gid));
-  if (!sheet) sheet = ss.getSheets()[0];
+function appendOrderRow(data) {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
 
   sheet.appendRow([
-    gid,
-    data['2kg 박스'] || '',
-    data['4kg 박스'] || '',
-    data['주문자 이름'] || '',
-    data['주문자 연락처'] || '',
-    data['수령인 이름'] || '',
-    data['수령인 연락처'] || '',
+    data['2kg박스'] || '',
+    data['4kg박스'] || '',
+    data['주문자이름'] || '',
+    data['주문자연락처'] || '',
+    data['수령인이름'] || '',
+    data['수령인연락처'] || '',
     data['우편번호'] || '',
     data['주소'] || '',
-    data['수령 희망일'] || '',
+    data['수령희망일'] || '',
     data['입금자명'] || '',
     data['가격'] || ''
   ]);
@@ -72,12 +68,12 @@ function sendKakaoToMe(data) {
 
   const text =
     '🍇 새 주문이 접수되었습니다\n' +
-    `- 2kg 박스: ${data['2kg 박스'] || 0}개\n` +
-    `- 4kg 박스: ${data['4kg 박스'] || 0}개\n` +
-    `- 주문자: ${data['주문자 이름']} (${data['주문자 연락처']})\n` +
-    `- 수령인: ${data['수령인 이름']} (${data['수령인 연락처']})\n` +
+    `- 2kg 박스: ${data['2kg박스'] || 0}개\n` +
+    `- 4kg 박스: ${data['4kg박스'] || 0}개\n` +
+    `- 주문자: ${data['주문자이름']} (${data['주문자연락처']})\n` +
+    `- 수령인: ${data['수령인이름']} (${data['수령인연락처']})\n` +
     `- 주소: [${data['우편번호']}] ${data['주소']}\n` +
-    `- 수령 희망일: ${data['수령 희망일']}\n` +
+    `- 수령 희망일: ${data['수령희망일']}\n` +
     `- 입금자명: ${data['입금자명']}\n` +
     `- 가격: ${data['가격']}원`;
 

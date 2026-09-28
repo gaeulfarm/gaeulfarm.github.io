@@ -34,17 +34,17 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
   const detailAddress = document.getElementById('sample6_detailAddress').value.trim();
   const fullAddress = baseAddress + (detailAddress ? ' ' + detailAddress : '');
 
-  // 구글 시트 컬럼 구조에 맞는 데이터 생성
+  // 구글 시트 컬럼 구조에 맞는 데이터 생성 (웹훅이 쿼리 파라미터로 값을 받음)
   const payload = {
-    "2kg 박스": qty2kg.toString(),
-    "4kg 박스": qty4kg.toString(),
-    "주문자 이름": document.getElementById('order-name').value.trim(),
-    "주문자 연락처": document.getElementById('order-phone').value.trim(),
-    "수령인 이름": document.getElementById('recipient-name').value.trim(),
-    "수령인 연락처": document.getElementById('recipient-phone').value.trim(),
+    "2kg박스": qty2kg.toString(),
+    "4kg박스": qty4kg.toString(),
+    "주문자이름": document.getElementById('order-name').value.trim(),
+    "주문자연락처": document.getElementById('order-phone').value.trim(),
+    "수령인이름": document.getElementById('recipient-name').value.trim(),
+    "수령인연락처": document.getElementById('recipient-phone').value.trim(),
     "우편번호": document.getElementById('sample6_postcode').value.trim(),
     "주소": fullAddress,
-    "수령 희망일": document.getElementById('delivery-date').value.trim(),
+    "수령희망일": document.getElementById('delivery-date').value.trim(),
     "입금자명": document.getElementById('depositor-name').value.trim(),
     "가격": totalPrice.toLocaleString()
   };
@@ -56,12 +56,11 @@ document.getElementById('reservation-form').addEventListener('submit', async (ev
   submitBtn.textContent = '처리 중...';
 
   try {
-    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxF7LAt3jgpnjyL4lt79sbzPjO4ZbDvQiyo_hBzJFIdd7PXPWEeVXJujB5nLASfvxCg/exec?gid=0';
-    
-    const res = await fetch(WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
+    const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxF7LAt3jgpnjyL4lt79sbzPjO4ZbDvQiyo_hBzJFIdd7PXPWEeVXJujB5nLASfvxCg/exec';
+    const query = new URLSearchParams(payload).toString();
+
+    const res = await fetch(`${WEBHOOK_URL}?${query}`, {
+      method: 'POST'
     });
     
     const data = await res.json().catch(() => ({}));
